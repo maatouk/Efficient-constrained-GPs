@@ -1,5 +1,5 @@
 # Efficient constrained Gaussian processes for shape restricted function estimation using elliptical slice sampling (ESS)
-This repository contains R codes and functions for implementing the efficient constrained Gaussian processes for shape restricted function estimate using Elliptical Slice Sampling (ESS) based on Maatouk et al. (2024b), and Maatouk and Bay (2017). Furthermore, it includes two functions for generating very large Gaussian vectors extracted from stationary Gaussian processes. The approach developed in this repository can incopporate multiple shape constraints such as monotonicity, boundedness and convexity, and estimated the hyperparameters. 
+This repository contains R codes and functions for implementing the efficient constrained Gaussian processes for shape restricted function estimate using Elliptical Slice Sampling (ESS) based on Maatouk et al. (2024b), and Maatouk and Bay (2017). Furthermore, it includes two functions for generating very large Gaussian vectors extracted from stationary Gaussian processes. The approach developed in this repository can incorporate multiple shape constraints such as monotonicity, boundedness, and convexity, and estimate the hyperparameters.
 
 # Description of the associated R files:
 1. 'all_base_functions_1D.R' file contains all the required base functions to generate the efficient constrained GP models, including functions like
@@ -32,5 +32,7 @@ Maatouk, H. and Rullière, D. and Bay, X. (2024a). "Bayesian analysis of constra
 [doi](https://projecteuclid.org/journals/bayesian-analysis/advance-publication/Bayesian-Analysis-of-Constrained-Gaussian-Processes/10.1214/24-BA1429.full)
 
 Maatouk, H. and Rullière, D. and Bay, X. (2024b). "Efficient constrained Gaussian processes using elliptical slice sampling". [preprint](https://hal.science/hal-04496474)
+
+Wood, A. and Chan, G. (1994). "Simulation of Stationary Gaussian Processes in [0,1]^d". Journal of Computational and Graphical Statistics. [doi](https://www.jstor.org/stable/1390903)
 
 Ray, P. and Pati, D. and Bhattacharya, A. (2020). "Efficient Bayesian shape-restricted function estimation with constrained Gaussian process priors". Statistics Computing 30, 839–853. [doi](https://link.springer.com/article/10.1007/s11222-020-09922-0) 
