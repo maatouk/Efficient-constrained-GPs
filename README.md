@@ -13,4 +13,5 @@ Hassan Maatouk, h.maatouk@hubebi.com
 # References
 Maatouk, H. and Bay, X. (2017). "Gaussian process emulators for computer experiments with inequality constraints". Mathematical Geosciences, 49(5): 557-582. [doi](https://link.springer.com/article/10.1007/s11004-017-9673-2)
 
-Maatouk, H. and Rullière, D. and Bay, X. (2024). "Bayesian analysis of constrained Gaussian processes". Bayesian Analysis, [Link](https://projecteuclid.org/journals/bayesian-analysis/advance-publication/Bayesian-Analysis-of-Constrained-Gaussian-Processes/10.1214/24-BA1429.full)
+Maatouk, H. and Rullière, D. and Bay, X. (2024). "Bayesian analysis of constrained Gaussian processes". Bayesian Analysis, doi: 10.1214/24-BA1429,
+[link](https://projecteuclid.org/journals/bayesian-analysis/advance-publication/Bayesian-Analysis-of-Constrained-Gaussian-Processes/10.1214/24-BA1429.full)
