@@ -15,3 +15,5 @@ Maatouk, H. and Bay, X. (2017). "Gaussian process emulators for computer experim
 
 Maatouk, H. and Rullière, D. and Bay, X. (2024). "Bayesian analysis of constrained Gaussian processes". Bayesian Analysis, doi: 10.1214/24-BA1429
 [doi](https://projecteuclid.org/journals/bayesian-analysis/advance-publication/Bayesian-Analysis-of-Constrained-Gaussian-Processes/10.1214/24-BA1429.full)
+
+Maatouk, H. and Rullière, D. and Bay, X. (2024). "Efficient constrained Gaussian processes using elliptical slice sampling". [preprint](https://hal.science/hal-04496474)
