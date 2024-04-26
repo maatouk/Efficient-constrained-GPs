@@ -6,7 +6,7 @@ This repository contains R codes and functions for implementing the efficient co
 Fast.LS (draws a very large Gaussian vector prior based on Maatouk et al. [2023b]), LS.KLE (draws a very large Gaussian vector prior based on Maatouk et al. [2023a]),
 samp.WC (draws a sample based on sampling scheme developed in Wood and Chan [1994]), ESS (draws a sample using elliptical slice sampler by Murray et al. [2010]).
 One can find detailed description of each functions in the file.
-2. 'all_models_1D.R' file contains all models that implemented the efficient constrained Gaussian processes for shape-restricted function estimation using elliptical slice sampling like 'linCGP.ESS' (the proposed approach) and 'linCGP.HMC' (the Hamiltonian Monte Carlo sampler). The proposed function 'linCGP.ESS' can incorporate multiple shape constraints, estimate the hyperparameters and and utilize various efficient samplers to generate the prior. This function has been tested in cases of extreme constraints, a task that becomes impossible for the HMC sampler.
+2. 'all_models_1D.R' file contains all models that implemented the efficient constrained Gaussian processes for shape-restricted function estimation using elliptical slice sampling like 'linCGP.ESS' (the proposed approach), 'linCGP.HMC' (the Hamiltonian Monte Carlo sampler) and 'linCGP.WC.ESS' (the Fast Fourier Transform). The proposed function 'linCGP.ESS' can incorporate multiple shape constraints, estimate the hyperparameters and and utilize various efficient samplers to generate the prior. This function has been tested in cases of extreme constraints, a task that becomes impossible for the HMC sampler.
 
 
    For more details on the codes or the functions, refer to the associated R files.
