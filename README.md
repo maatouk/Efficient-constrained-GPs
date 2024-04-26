@@ -6,3 +6,7 @@ Part of this work was conducted with the support of the consortium in Applied Ma
 
 # Authors:
 Hassan Maatouk (EBI, Cergy-Pontoise).
+
+# Maintainer: 
+Hassan Maatouk, h.maatouk@hubebi.com
+
