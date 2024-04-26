@@ -1,6 +1,16 @@
 # Efficient constrained Gaussian processes for shape restricted function estimation using elliptical slice sampling (ESS)
 This repository contains R codes and functions for implementing the efficient constrained Gaussian processes for shape restricted function estimate using Elliptical Slice Sampling (ESS) based on Maatouk et al. (2024b), and Maatouk and Bay (2017). Furthermore, it includes two functions for generating very large Gaussian vectors extracted from stationary Gaussian processes. The approach developed in this repository can incopporate multiple shape constraints such as monotonicity, boundedness and convexity, and estimated the hyperparameters. 
 
+# Description of the associated R files:
+1. 'all_base_functions_1D.R' file contains all the required base functions to generate the efficient constrained GP models, including functions like
+Fast.LS (draws a very large Gaussian vector prior based on Maatouk et al. [2023b]), LS.KLE (draws a very large Gaussian vector prior based on Maatouk et al. [2023a]),
+samp.WC (draws a sample based on sampling scheme developed in Wood and Chan [1994]), ESS (draws a sample using elliptical slice sampler by Murray et al. [2010]).
+One can find detailed description of each functions in the file.
+2. 'all_models_1D.R' file contains all models that implemented the efficient constrained Gaussian processes for shape-restricted function estimation using elliptical slice sampling like 'linCGP.ESS' (the proposed approach) and 'linCGP.HMC' (the Hamiltonian Monte Carlo sampler). The proposed function 'linCGP.ESS' can incorporate multiple shape constraints, estimate the hyperparameters and and utilize various efficient samplers to generate the prior.
+
+
+   For more details on the codes or the functions, refer to the associated R files.
+
 # Note:
 Part of this work was conducted with the support of the consortium in Applied Mathematics CIROQUO, gathering partners in technological research (BRGM, CEA, IFPEN, IRSN, Safran, Storengy) and academia (CNRS, Ecole Centrale de Lyon, Mines Saint-Etienne, University of Grenoble, University of Nice, University of Toulouse) around advanced methods for Computer Experiments [Link]( https://doi.org/10.5281/zenodo.65812)
 
