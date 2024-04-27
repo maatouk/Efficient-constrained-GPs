@@ -1,13 +1,15 @@
 ### All required functions for using ESS
 ### Functions related to Wood and Chan algorithm of drawing samples
-### MH for sampling from \nu and \ell
+### Two highly efficient functions for sampling large MVN distribution
 ### Covariance matrix and design matrix (using basis function) are also defined
+### Matrices of multiples shape constraints are also defined
 ### And all related and dependant functions are here
 
 ### Required libraries:
 library(FastGP) # for tinv and rcpp_rmvnorm function
 library(rSPDE) # Matern cov fct
-library(mvtnorm);library(MASS)
+library(mvtnorm) # for MVN distribution
+library(MASS) # for MVN distribution
 library(quadprog) # for the MAP
 library(Rfast) # matrnorm
 
