@@ -2,11 +2,10 @@
 #### Function for MCMC samples using ESS and LS algo #######
 ############################################################
 
-setwd("~/Documents/Recherche/Article_high-dim_CGP/R codes/1D cases")
 source('all_base_functions_1D.R')
-source('tmg.R')
+# source('tmg.R')
 library(Matrix) # crossprod
-library(tmg) # HMC sampler
+# library(tmg) # HMC sampler
 library(nloptr) # for resolving optim problem
 
 
@@ -18,7 +17,7 @@ library(nloptr) # for resolving optim problem
 ## Function for drawing posterior samples using ESS and LS with fixed hyperparameters \nu and \ell:
 ## For increasing,decreasing and boundedness functions estimation 
 linCGP.ESS <- function(y, x, N1, M, nu, l,est.l = F, eta, nsim, burn.in, thin, tau.in, sig.in, xi.in, lower = -Inf, upper = Inf,
-                       constrType, prior, tau.fix, sig.fix, sseed, verbose, return.plot, tol){
+                       constrType, prior, tau.fix, sig.fix, sseed, verbose, return.plot, tol) {
   # y:Response variable; x: vector to form design matrix X (n x N)
   # N1: number of knots first subdomain; M: nb of subdomain
   # nu:smoothness parameter of Matern; l:length-scale parameter of Matern
@@ -140,10 +139,10 @@ linCGP.ESS <- function(y, x, N1, M, nu, l,est.l = F, eta, nsim, burn.in, thin, t
     solve.QP(XXK, dvec = as.vector(t(X)%*%y),
              Amat = t(rbind(A_b, A)), bvec = -c(B_b, B), meq = 0)$solution
   }
-  fMAP <- function(l){
+  fMAP <- function(l) {
     X %*% fzetoil(l)
   }
-  MSPE <- function(l){
+  MSPE <- function(l) {
     return(mean((y - fMAP(l))^2))
   }
   if (missing(l)) {
@@ -320,7 +319,7 @@ linCGP.ESS <- function(y, x, N1, M, nu, l,est.l = F, eta, nsim, burn.in, thin, t
 ### Function for drawing posterior samples using ESS and FFT-WC with fixed hyperparameters \nu and \ell:
 ### For increasing,decreasing and boundedness functions estimation 
 linCGP.WC.ESS <- function(y,x,N,nu,l,est.l=F,eta,nsim,burn.in,thin,tau.in,sig.in,xi.in,lower=-Inf,upper=Inf,
-                          constrType,tau.fix,sig.fix,sseed,verbose,return.plot,tol){
+                          constrType,tau.fix,sig.fix,sseed,verbose,return.plot,tol) {
   # y:Response variable; x: vector to form design matrix X (n x N)
   # N: number of knots 
   # nu:smoothness parameter of Matern; l:length-scale parameter of Matern
@@ -423,16 +422,16 @@ linCGP.WC.ESS <- function(y,x,N,nu,l,est.l=F,eta,nsim,burn.in,thin,tau.in,sig.in
     sig.in <- 1
   
   ## for the estimation of the length-scale para
-  fzetoil <- function(l){
+  fzetoil <- function(l) {
     K_inv <- tinv(covmat(knot = my_knots, nu = nu, l = l))
     XXK <- crossprod(X) + K_inv
     solve.QP(XXK,dvec=as.vector(t(X)%*%y),
              Amat=t(rbind(A_b, A)),bvec=-c(B_b, B),meq=0)$solution
   }
-  fMAP <- function(l){
+  fMAP <- function(l) {
     X %*% fzetoil(l)
   }
-  MSPE <- function(l){
+  MSPE <- function(l) {
     return(mean((y - fMAP(l))^2))
   }
   if (missing(l)) {
@@ -543,8 +542,8 @@ linCGP.WC.ESS <- function(y,x,N,nu,l,est.l=F,eta,nsim,burn.in,thin,tau.in,sig.in
 
 ### Function for drawing posterior samples using HMC with fixed hyperparameters \nu and \ell:
 ### For increasing,decreasing and boundedness functions estimation 
-linCGP.HMC <- function(y,x,N,nu,l,est.l=F,nsim,burn.in,thin,tau.in,sig.in,xi.in,lower=-Inf,upper=Inf,
-                       constrType,tau.fix,sig.fix,sseed,verbose,return.plot,tol){
+linCGP.HMC <- function(y, x, N, nu, l, est.l = F, nsim, burn.in, thin, tau.in, sig.in, xi.in, lower = -Inf, upper = Inf,
+                       constrType, tau.fix, sig.fix, sseed, verbose, return.plot, tol) {
   # y:Response variable; x: vector to form design matrix X (n x N)
   # N: number of knots 
   # nu:smoothness parameter of Matern; l:length-scale parameter of Matern
@@ -565,9 +564,9 @@ linCGP.HMC <- function(y,x,N,nu,l,est.l=F,nsim,burn.in,thin,tau.in,sig.in,xi.in,
   y <- y[order(x)]
   x <- sort(x)
   n <- length(y)
-  delta <- 1/(N-1)
-  my_knots <- seq(0,1,by=delta)
-  X <- fcth(x,u=my_knots,N)
+  delta <- 1 / (N-1)
+  my_knots <- seq(0, 1, by = delta)
+  X <- fcth(x, u = my_knots, N = N)
   
   if (missing(nu))
     stop("nu needs to be supplied")
@@ -604,20 +603,20 @@ linCGP.HMC <- function(y,x,N,nu,l,est.l=F,nsim,burn.in,thin,tau.in,sig.in,xi.in,
     if (any(lower >= upper)) 
       stop("The elements from \"upper\" has to be greater than the elements from \"lower\"")
     if (length(lower) == 1)
-      lower <- rep(lower,N)
+      lower <- rep(lower, N)
     if (length(upper) == 1)
-      upper <- rep(upper,N)
-    A <- rbind(A,constrSys(N=N,type='boundedness',lower=lower,upper=upper)$A)
-    B <- c(B,constrSys(N=N,type='boundedness',lower=lower,upper=upper)$B)
+      upper <- rep(upper, N)
+    A <- rbind(A, constrSys(N = N, type = 'boundedness', lower = lower, upper = upper)$A)
+    B <- c(B, constrSys(N = N, type = 'boundedness', lower = lower, upper = upper)$B)
   }
   
   if (any(constrType == 'increasing')) {
-    A <- rbind(A,constrSys(N=N,type='increasing')$A)
-    B <- c(B,constrSys(N=N,type='increasing')$B)
+    A <- rbind(A, constrSys(N = N, type = 'increasing')$A)
+    B <- c(B, constrSys(N = N, type = 'increasing')$B)
   }
   if (any(constrType == 'decreasing')) {
-    A <- rbind(A,constrSys(N=N,type='decreasing')$A)
-    B <- c(B,constrSys(N=N,type='decreasing')$B)
+    A <- rbind(A, constrSys(N = N, type = 'decreasing')$A)
+    B <- c(B, constrSys(N = N, type = 'decreasing')$B)
   }
   
   if (!missing(tau.fix))
@@ -631,16 +630,16 @@ linCGP.HMC <- function(y,x,N,nu,l,est.l=F,nsim,burn.in,thin,tau.in,sig.in,xi.in,
   
   
   ## for the estimation of the length-scale para
-  fzetoil <- function(l){
-    K_inv <- tinv(covmat(knot=my_knots,nu=nu,l=l))
+  fzetoil <- function(l) {
+    K_inv <- tinv(covmat(knot = my_knots, nu = nu, l = l))
     XXK <- crossprod(X) + K_inv
-    solve.QP(XXK,dvec=as.vector(t(X)%*%y),
-             Amat=t(A),bvec=-B,meq=0)$solution
+    solve.QP(Dmat = XXK, dvec = as.vector(t(X) %*% y),
+             Amat = t(A), bvec = -B, meq = 0)$solution
   }
-  fMAP <- function(l){
+  fMAP <- function(l) {
     X %*% fzetoil(l)
   }
-  MSPE <- function(l){
+  MSPE <- function(l) {
     return(mean((y - fMAP(l))^2))
   }
   if (missing(l)) {
@@ -650,7 +649,7 @@ linCGP.HMC <- function(y,x,N,nu,l,est.l=F,nsim,burn.in,thin,tau.in,sig.in,xi.in,
       l <- nloptr(l_est(nu, range = range(my_knots), 0.05), MSPE, lb = 0.1, ub = 1, opts = opts)$solution
     }
     else if (est.l == F)
-      l <- l_est(nu,range=range(my_knots),0.05)
+      l <- l_est(nu, range = range(my_knots), 0.05)
   }
   if (missing(xi.in)) {
     xi.in <- fzetoil(l)
@@ -665,10 +664,10 @@ linCGP.HMC <- function(y,x,N,nu,l,est.l=F,nsim,burn.in,thin,tau.in,sig.in,xi.in,
   
   em <- nsim + burn.in
   ef <- nsim / thin
-  xi_sam <- matrix(NA, N, ef)
+  xi_sam <- matrix(NA, nrow = N, ncol = ef)
   tau_sam <- rep(NA, ef)
   sig_sam <- rep(NA, ef)
-  fhat_sam <- matrix(NA, n, ef)
+  fhat_sam <- matrix(NA, nrow = n, ncol = ef)
   
   if (verbose)
     print("MCMC sample draws:")
@@ -676,26 +675,26 @@ linCGP.HMC <- function(y,x,N,nu,l,est.l=F,nsim,burn.in,thin,tau.in,sig.in,xi.in,
   ptm <- proc.time()
   for (i in 1 : em) {
     # sampling Xi:
-    M <- crossprod(X)/sig + K_inv/tau
-    r <- as.vector(t(X)%*%y)/sig
-    xi_out <- as.vector(rtmg(n=1,M=M,r=r,initial=xi_in,f=A,g=B+tol,burn.in=0))
-    set.seed(2*i)
+    M <- crossprod(X) / sig + K_inv / tau
+    r <- as.vector(t(X) %*% y) / sig
+    xi_out <- as.vector(rtmg(n = 1, M = M, r = r, initial = xi_in, f = A, g = B + tol, burn.in = 0))
+    set.seed(2 * i)
     # sampling \sigma^2:
     Xxi <- as.vector(X %*% xi_out)
     y_star <- y - Xxi
     if (missing(sig.fix))
-      sig <- 1/rgamma(1, shape=n/2, rate=sum(y_star^2)/2)
+      sig <- 1 / rgamma(1, shape = n / 2, rate = sum(y_star^2)/2)
     
     # sampling \tau^2:
     if (missing(tau.fix))
-      tau <- 1/rgamma(1, shape=N/2, rate=(t(xi_out)%*%K_inv%*%xi_out)/2)
+      tau <- 1 / rgamma(1, shape = N / 2, rate = (t(xi_out) %*% K_inv %*% xi_out)/2)
     
     # storing MCMC samples:
     if (i > burn.in && i %% thin == 0) {
-      xi_sam[,(i-burn.in)/thin] <- xi_out
+      xi_sam[, (i-burn.in)/thin] <- xi_out
       sig_sam[(i-burn.in)/thin] <- sig
       tau_sam[(i-burn.in)/thin] <- tau
-      fhat_sam[,(i-burn.in)/thin] <- Xxi
+      fhat_sam[, (i-burn.in)/thin] <- Xxi
     }
     
     if (i %% 1000 == 0 && verbose) {
@@ -704,37 +703,38 @@ linCGP.HMC <- function(y,x,N,nu,l,est.l=F,nsim,burn.in,thin,tau.in,sig.in,xi.in,
     
     # renewing the intial value:
     xi_in <- xi_out
-  }; tm <- proc.time()-ptm
+  } 
+  tm <- proc.time() - ptm
   
   ## posterior Mode
-  XXK <- crossprod(X)/mean(sig_sam)+K_inv/mean(tau_sam)
-  z_star <- solve.QP(XXK,dvec=as.vector(t(X)%*%y)/mean(sig_sam),
-                     Amat=t(A),bvec=-B,meq=0)$solution
-  MAP <- X%*%z_star 
+  XXK <- crossprod(X) / mean(sig_sam) + K_inv / mean(tau_sam)
+  z_star <- solve.QP(Dmat = XXK, dvec = as.vector(t(X) %*% y) / mean(sig_sam),
+                     Amat = t(A), bvec = -B, meq = 0)$solution
+  MAP <- X %*% z_star 
   ## mAP estimate
   z_mean <- rowMeans(xi_sam)
   fmean <- rowMeans(fhat_sam) # mAP estimate
-  qnt <- apply(fhat_sam,1,function(x) quantile(x,c(0.025,0.975),na.rm=TRUE))
-  f_low <- qnt[1,]
-  f_upp <- qnt[2,]
-  ub <- max(f_low,f_upp,fmean,MAP)
-  lb <- min(f_low,f_upp,fmean,MAP)
+  qnt <- apply(fhat_sam, 1, function(x) quantile(x, c(0.025, 0.975), na.rm = TRUE))
+  f_low <- qnt[1, ]
+  f_upp <- qnt[2, ]
+  ub <- max(f_low, f_upp, fmean, MAP)
+  lb <- min(f_low, f_upp, fmean, MAP)
   
   if (return.plot) {
-    par(mfrow=c(1, 1))
-    par(mar=c(2.1, 2.1, 2.1, 1.1)) # adapt margins
-    plot(x,y,pch='*',lwd=2,lty=1,col='black',
-         ylim=range(ub,lb,y),xlab='',ylab='')
-    polygon(c(x,rev(x)),y=c(f_low, rev(f_upp)),border=F,col='gray')
-    lines(x,fmean,type='l',lty=4,lwd=2,col='blue')
-    lines(x,MAP,type='l',lty=2,lwd=2,col='red')
-    points(x,y,pch='*')
+    par(mfrow = c(1, 1))
+    par(mar = c(2.1, 2.1, 2.1, 1.1)) # adapt margins
+    plot(x, y, pch = '*', lwd = 2, lty = 1, col = 'black',
+         ylim = range(ub, lb, y), xlab = '', ylab = '')
+    polygon(c(x, rev(x)), y = c(f_low, rev(f_upp)), border = F,col = 'gray')
+    lines(x, fmean, type = 'l', lty = 4, lwd = 2, col = 'blue')
+    lines(x, MAP, type = 'l', lty = 2, lwd = 2, col = 'red')
+    points(x, y, pch = '*')
   }
   
-  return(list("time"=tm,"xi_sam"=xi_sam,"sig_sam"=sig_sam,"tau_sam"=tau_sam,
-              "fhat_sam"=fhat_sam,"fmean"=fmean,
-              "f_low"=f_low,"f_upp"=f_upp,"z_star"=z_star,
-              "MAP"=MAP,"knots"=my_knots,"z_mean"=z_mean,"length-scale"=l))
+  return(list("time" = tm, "xi_sam" = xi_sam, "sig_sam" = sig_sam, "tau_sam" = tau_sam,
+              "fhat_sam" = fhat_sam, "fmean" = fmean,
+              "f_low" = f_low, "f_upp" = f_upp, "z_star" = z_star,
+              "MAP" = MAP, "knots" = my_knots, "z_mean" = z_mean, "length-scale" = l))
 }
 ###################################################
 
@@ -770,7 +770,7 @@ linCGP.HMC <- function(y,x,N,nu,l,est.l=F,nsim,burn.in,thin,tau.in,sig.in,xi.in,
 ## Function for drawing posterior samples using ESS and LS with fixed hyperparameters \nu and \ell:
 ## For constrained shape functions estimation 
 lin.LS.ESS <- function(y,x,N1,M,nu,l,eta,nsim,burn.in,thin,tau.in,sig.in,xi.in,A,B,
-                       prior,tau.fix,sig.fix,sseed,verbose,return.plot,tol){
+                       prior,tau.fix,sig.fix,sseed,verbose,return.plot,tol) {
   # y:Response variable; x: vector to form design matrix X (n x N)
   # N1: number of knots first subdomain; M: nb of subdomain
   # nu:smoothness parameter of Matern; l:length-scale parameter of Matern
@@ -939,7 +939,7 @@ lin.LS.ESS <- function(y,x,N1,M,nu,l,eta,nsim,burn.in,thin,tau.in,sig.in,xi.in,A
 
 ### Hamiltonian Monte Carlo (HMC)
 lin.HMC <- function(y,x,N,nu,l,nsim,burn.in,thin,tau.in,sig.in,xi.in,A,B,
-                    tau.fix,sig.fix,sseed,verbose,return.plot,tol){
+                    tau.fix,sig.fix,sseed,verbose,return.plot,tol) {
   # y:Response variable; x: vector to form design matrix X (n x N)
   # N: number of knots 
   # nu:smoothness parameter of Matern; l:length-scale parameter of Matern
