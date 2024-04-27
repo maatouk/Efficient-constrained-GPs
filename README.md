@@ -16,6 +16,9 @@ One can find detailed description of each functions in the file.
 # Illustrative example:
 [Monotonicity](https://github.com/maatouk/Efficient-constrained-GPs/blob/main/LSvsHMC-monotonicity.pdf): Monotone function estimation with three different approaches. Top: the proposed LS-ESS approach with N = 27 (left) and N = 100 (right). Middle: the FFT-WC ESS approach with N = 27 and N = 100 (right). Bottom: the HMC sampler with N = 27 (left) and N = 100 (right). The computation time (in second) of running the McMC sampler for 6,000 iterations is displayed at the main part of each panel, where the first 1,000 iterations are discarded as burn-in. With a fine discretization, N = 100, the proposed LS-ESS approach is approximately 6 times faster than the HMC approach.
 
+[Boundedness](https://github.com/maatouk/Efficient-constrained-GPs/blob/main/LS-ESSvsHMV_boundedness.png): Bounded function estimation with three different approaches. Top: the proposed LS-ESS approach with N = 27 (left) and N = 100 (right). Middle: the FFT-WC ESS approach with N = 27 and N = 100 (right). Bottom: the HMC sampler with N = 27 (left) and N = 100 (right). The computation time (in second) of running the McMC sampler for 6,000 iterations is displayed at the main part of each panel, where the first 1,000 iterations are discarded as burn-in. As for monotonicity constraints, with a fine discretization, N = 100, the proposed LS-ESS approach is approximately 6 times faster than the HMC approach.
+
+
 # Note:
 Part of this work was conducted with the support of the consortium in Applied Mathematics CIROQUO, gathering partners in technological research (BRGM, CEA, IFPEN, IRSN, Safran, Storengy) and academia (CNRS, Ecole Centrale de Lyon, Mines Saint-Etienne, University of Grenoble, University of Nice, University of Toulouse) around advanced methods for Computer Experiments [Link]( https://doi.org/10.5281/zenodo.65812)
 
