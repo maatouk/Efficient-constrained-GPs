@@ -15,7 +15,7 @@ library(Rfast) # matrnorm
 
 
 
-## 1D Gaussian covariance function with length-scale l
+## 1D Gaussian covariance function with length-scale parameter l
 kGaus <- function(h, l) {
   exp(-0.5 * (h/l))
 }
