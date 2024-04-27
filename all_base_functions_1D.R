@@ -364,7 +364,7 @@ Fast.LS_v <- function(nsim, u, M, N1, nu, l, tausq, tol, sseedLS = 1) {
     eta <- t(Rfast::rmvnorm(n = nsim, mu = rep(0, N1), sigma = Gamma11))
     etaT[[i]] <- Ktilde %*% (etaT[[i-1]]) + L %*% eta
   }
-  return(do.call(rbind,etaT))
+  return(do.call(rbind, etaT))
 }
 ####################################################
 
@@ -737,27 +737,18 @@ err.meas.report <- function(ytest, ytr, mu, out, type = "all") {
   std_error_sq <- error_sq/var(ytest)
   Q2 <- 1 - sum(error_sq)/sum((ytest - mean(ytest))^2)
   pva <- error_sq/varsigma
-  # sserror <- ((ytest - mu)^2)/(2*varsigma)
-  # logprob <- 0.5*log(2*pi*varsigma) + sserror -
-  #   0.5*log(2*pi*var(y)) - ((ytest - mean(y))^2)/(2*var(y))
-  # logprob <- logprob[complete.cases(logprob)]
-  # cia <- ytest >= (mu-control$nsigma*sqrt(varsigma)) &
-  #   ytest <= (mu+control$nsigma*sqrt(varsigma))
-  
   error <- c(mae = mean(error_abs), mse = mean(error_sq),
              rmse = sqrt(mean(error_sq)),
-             smse = mean(std_error_sq), #msll = mean(logprob),
-             Q2 = Q2, pva = abs(log(mean(pva))), WAIC=waic1)#, cia = mean(cia))
+             smse = mean(std_error_sq), 
+             Q2 = Q2, pva = abs(log(mean(pva))), WAIC=waic1)
   switch(type,
          mae = {return(error["mae"])},
          mse = {return(error["mse"])},
          rmse = {return(error["rmse"])},
          smse = {return(error["smse"])},
-         # msll = {return(error["msll"])},
          Q2 = {return(error["Q2"])},
          pva = {return(error["pva"])},
          WAIC = {return(error["WAIC"])},
-         # cia = {return(error["cia"])},
          {return(as.matrix(error, nrow = 1))}
   )
 }
