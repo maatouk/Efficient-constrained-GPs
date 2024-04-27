@@ -28,18 +28,18 @@ Hassan Maatouk, h.maatouk@hubebi.com
 # References
 Maatouk, H. and Bay, X. (2017). "Gaussian process emulators for computer experiments with inequality constraints". Mathematical Geosciences, 49(5): 557-582 [doi](https://link.springer.com/article/10.1007/s11004-017-9673-2)
 
-Maatouk, H. and Rullière, D. and Bay, X. (2023a). "Sampling large hyperplane‐truncated multivariate normal distributions", Computational Statistics. [doi](https://link.springer.com/article/10.1007/s00180-023-01416-7)
+Maatouk, H. and Rullière, D. and Bay, X. (2023a). "Sampling large hyperplane‐truncated multivariate normal distributions", Computational Statistics [doi](https://link.springer.com/article/10.1007/s00180-023-01416-7)
 
-Maatouk, H. and Rullière, D. and Bay, X. (2023b). "Large-scale constrained Gaussian processes for shape-restricted function estimation". [preprint](https://hal.science/hal-04348962/document)
+Maatouk, H. and Rullière, D. and Bay, X. (2023b). "Large-scale constrained Gaussian processes for shape-restricted function estimation" [preprint](https://hal.science/hal-04348962/document)
 
 
 Maatouk, H. and Rullière, D. and Bay, X. (2024a). "Bayesian analysis of constrained Gaussian processes". Bayesian Analysis, doi: 10.1214/24-BA1429
 [doi](https://projecteuclid.org/journals/bayesian-analysis/advance-publication/Bayesian-Analysis-of-Constrained-Gaussian-Processes/10.1214/24-BA1429.full)
 
-Maatouk, H. and Rullière, D. and Bay, X. (2024b). "Efficient constrained Gaussian processes using elliptical slice sampling". [preprint](https://hal.science/hal-04496474)
+Maatouk, H. and Rullière, D. and Bay, X. (2024b). "Efficient constrained Gaussian processes using elliptical slice sampling" [preprint](https://hal.science/hal-04496474)
 
 Murray I., Adams R., MacKay D. (2010). "Elliptical slice sampling". In: Proceedings of the thirteenth international conference on artificial intelligence and statistics, JMLR Workshop and Conference Proceedings, pp 541–548
 
-Wood, A. and Chan, G. (1994). "Simulation of Stationary Gaussian Processes in [0,1]^d". Journal of Computational and Graphical Statistics. [doi](https://www.jstor.org/stable/1390903)
+Wood, A. and Chan, G. (1994). "Simulation of Stationary Gaussian Processes in [0,1]^d". Journal of Computational and Graphical Statistics [doi](https://www.jstor.org/stable/1390903)
 
-Ray, P. and Pati, D. and Bhattacharya, A. (2020). "Efficient Bayesian shape-restricted function estimation with constrained Gaussian process priors". Statistics Computing 30, 839–853. [doi](https://link.springer.com/article/10.1007/s11222-020-09922-0) 
+Ray, P. and Pati, D. and Bhattacharya, A. (2020). "Efficient Bayesian shape-restricted function estimation with constrained Gaussian process priors". Statistics Computing 30, 839–853 [doi](https://link.springer.com/article/10.1007/s11222-020-09922-0) 
