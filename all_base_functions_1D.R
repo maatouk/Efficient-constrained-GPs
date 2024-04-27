@@ -5,7 +5,6 @@
 ### And all related and dependant functions are here
 
 ### Required libraries:
-# library(fields)
 library(FastGP) # for tinv and rcpp_rmvnorm function
 library(rSPDE) # Matern cov fct
 library(mvtnorm);library(MASS)
@@ -33,15 +32,15 @@ covmat_Gaus <- function(knot, l) {
 
 # 1D Matern kernel with smoothness nu and length-scale l:
 k <- function(h, nu, l) {
-  matern.covariance(h, sqrt(2*nu)/l, nu=nu, sigma=1)
+  matern.covariance(h = h, kappa = sqrt(2*nu)/l, nu = nu, sigma = 1)
 }
 
 ## function for uniroot:
 fl <- function(l, para) { 
   #para[1]=x, para[2]=y and para[3]=nu of MK : Matern kernel function;
   #para[4]=pre-specified value of the correlation
-  a <- k(h=abs(para[1]-para[2]), nu=para[3], l=l)
-  return(a-para[4])
+  a <- k(h = abs(para[1]-para[2]), nu = para[3], l = l)
+  return(a - para[4])
 }
 
 ## function for estimating l:
@@ -49,7 +48,7 @@ l_est <- function(nu, range, val) {
   # nu : smoothness; range : c(min, max) of the range of variable
   # val : pre-specified value of the correlation between the maximum seperation
   para <- c(range[1], range[2], nu, val)
-  rl <- uniroot(f=fl, interval = c(0.000001,100000), para)
+  rl <- uniroot(f = fl, interval = c(0.000001, 100000), para)
   return(rl$root)
 }
 
@@ -68,7 +67,7 @@ covmat <- function(knot, nu, l) {
 ####################################################
 ## hat basis functions
 h <- function(x) {
-  ifelse(x >= -1 & x <= 1, 1-abs(x), 0)
+  ifelse(x >= -1 & x <= 1, 1 - abs(x), 0)
 }
 hi <- function(x, u, i) {
   delta <- (max(u) - min(u)) / (length(u) - 1)
@@ -142,7 +141,7 @@ nnd_C <- function(knot, g, nu, l, tausq) {
   C.vec <- C.eval(knot, g, nu, l, tausq)$vec
   eval <- C.eval(knot, g, nu, l, tausq)$min.eig.val
   if (eval > 0)
-    return(list("cj" = C.vec,"g" = g))
+    return(list("cj" = C.vec, "g" = g))
   else {
     g <- g + 1
     nnd_C(knot, g, nu, l, tausq)
@@ -172,13 +171,13 @@ samp.WC <- function(knot, nu, l, tausq, sseedWC = 1) {
   set.seed(sseedWC)
   a <- rep(0, m)
   a[1] <- sqrt(lambda[1]) * rnorm(1) / sqrt(m)
-  a[(m/2)+1] <- sqrt(lambda[(m/2)+1])*rnorm(1)/sqrt(m)
+  a[(m/2)+1] <- sqrt(lambda[(m/2)+1]) * rnorm(1) / sqrt(m)
   i <- sqrt(as.complex(-1))
   for (j in 2 : (m/2)) {
     uj <- rnorm(1) 
     vj <- rnorm(1)
-    a[j] <- (sqrt(lambda[j])*(uj + i*vj))/(sqrt(2*m))
-    a[m+2-j] <- (sqrt(lambda[j])*(uj - i*vj))/(sqrt(2*m))
+    a[j] <- (sqrt(lambda[j]) * (uj + i * vj)) / (sqrt(2 * m))
+    a[m+2-j] <- (sqrt(lambda[j]) * (uj - i * vj)) / (sqrt(2 * m))
   }
   samp <- fft(a)
   samp.vec <- Re(samp[1 : N])
@@ -199,8 +198,8 @@ ESS.linear <- function(y, X, beta, nu_ess, eta, sigsq, A, B, seeds = 1, constrTy
   logy <- loglik_linear(y = y, X = X, eta = eta, beta = beta, sigsq = sigsq, A = A, B = B, lower = lower, upper = upper, constrType = constrType) + log(u)
   
   theta <- runif(n = 1, min = 0, max = 2 * pi) 
-  thetamin <- theta - 2*pi
-  thetamax <- theta + 2*pi
+  thetamin <- theta - 2 * pi
+  thetamax <- theta + 2 * pi
   beta_star <- beta * cos(theta) + nu_ess * sin(theta)
   
   while (loglik_linear(y = y, X = X, eta = eta, beta = beta_star, sigsq = sigsq, A = A, B = B, lower = lower, upper = upper, constrType = constrType) <= logy) {
@@ -208,7 +207,7 @@ ESS.linear <- function(y, X, beta, nu_ess, eta, sigsq, A, B, seeds = 1, constrTy
       thetamin <- theta
     else
       thetamax <- theta
-    theta <- runif(n=1, min = thetamin, max = thetamax)
+    theta <- runif(n = 1, min = thetamin, max = thetamax)
     beta_star <- beta * cos(theta) + nu_ess * sin(theta)
   }
   return(beta_star)       
@@ -225,7 +224,7 @@ ESS.linear <- function(y, X, beta, nu_ess, eta, sigsq, A, B, seeds = 1, constrTy
 ####################################################
 
 ## loglik linear constr AX+B>=0_m
-loglik_linear <- function(y, X, sigsq, eta, beta, A, B, lower=-Inf, upper=Inf, constrType=c('increasing','decreasing','convex','concave','boundedness')) {
+loglik_linear <- function(y, X, sigsq, eta, beta, A, B, lower = -Inf, upper = Inf, constrType = c('increasing', 'decreasing', 'convex', 'concave', 'boundedness')) {
   mu <- y - (X %*% beta)
   J_eta <- c()
   if (any(constrType == 'boundedness')) {
@@ -283,21 +282,13 @@ Fast.LS <- function(u, M, N1, nu, l, tausq, tol, sseedLS = 1) {
   else 
     Gamma12 <- tausq * k(outer(u2, u1, '-'), nu = nu, l = l)
   Ktilde <- Gamma12 %*% tinv(Gamma11) # coupling matrix
-  ## slightly faster for computing L
-  # L <- rcppeigen_get_chol(Gamma11-Gamma12%*%t(Ktilde))%*%
-  #   solve(((rcppeigen_get_chol(Gamma11))))
-  # G11G12Ktile <- Gamma11-Gamma12%*%t(Ktilde)
-  # if (min(eigen(G11G12Ktile, symmetric = TRUE)$values) <= 0) # numerical stability
-  #   G11G12Ktile <- G11G12Ktile + tol*diag(N1)
-  
   L <- t(chol(Gamma11 - Gamma12 %*% t(Ktilde) + tol * diag(N1))) %*% solve(t(chol(Gamma11)))
-  eta <- # mvrnorm(n=M,mu=rep(0,N1),Sigma=Gamma11,tol=1e-6)
+  eta <- Rfast::rmvnorm(n = M, mu = rep(0, N1), sigma = Gamma11)
     # rcpp_rmvnorm(n = M, S = Gamma11, mu = rep(0,N1))
-    Rfast::rmvnorm(n = M, mu = rep(0, N1), sigma = Gamma11)
   etaT <- matrix(NA, nrow = M, ncol = N1)
-  etaT[1,] <- eta[1, ]
+  etaT[1, ] <- eta[1, ]
   for (i in 2 : M) {
-    etaT[i,] <- Ktilde %*% (etaT[i-1, ]) + L %*% (eta[i, ])
+    etaT[i, ] <- Ktilde %*% (etaT[i-1, ]) + L %*% (eta[i, ])
   }
   return(as.vector(t(etaT)))
 }
@@ -330,24 +321,24 @@ Fast.LS.WC <- function(u, M, N1, nu, l, tausq, tol, sseedWC = 1) {
     Ktilde <- Gamma12 %*% tinv(Gamma11)
   L <- t(chol(Gamma11 - Gamma12 %*% t(Ktilde))) %*% solve(t(chol(Gamma11)))
   eta <- matrix(NA, nrow = M, ncol = N1)
-  eta[1,] <- samp.WC(u1, nu = nu, l = l, tausq = tausq, sseedWC)
+  eta[1, ] <- samp.WC(u1, nu = nu, l = l, tausq = tausq, sseedWC)
   etaT <- matrix(NA, nrow = M, ncol = N1)
-  etaT[1,] <- eta[1, ]
+  etaT[1, ] <- eta[1, ]
   for (i in 2 : M) {
-    eta[i,] <- samp.WC(u1, nu = nu, l = l, tausq = tausq, sseedWC)
-    etaT[i,] <- Ktilde %*% (etaT[i-1, ]) + L %*% (eta[i, ])
+    eta[i, ] <- samp.WC(u1, nu = nu, l = l, tausq = tausq, sseedWC)
+    etaT[i, ] <- Ktilde %*% (etaT[i-1, ]) + L %*% (eta[i, ])
   }
   return(as.vector(t(etaT)))
 }
 ####################################################
 
 ### Fast Large-scale for more than one sample
-Fast.LS_v <- function(nsim, u, M, N1, nu, l, tausq, tol, sseedLS=1) {
+Fast.LS_v <- function(nsim, u, M, N1, nu, l, tausq, tol, sseedLS = 1) {
   if (missing(tol)) {
     tol <- 1e-6
   }
   if (missing(M)) {
-    M <-1
+    M <- 1
   }
   if (M == 0)
     stop("M cannot be zero")
@@ -365,9 +356,6 @@ Fast.LS_v <- function(nsim, u, M, N1, nu, l, tausq, tol, sseedLS=1) {
   else 
     Gamma12 <- tausq * k(outer(u2, u1, '-'), nu = nu, l = l)
   Ktilde <- Gamma12 %*% tinv(Gamma11) # coupling matrix
-  ## slightly faster for computing L
-  # L <- rcppeigen_get_chol(Gamma11-Gamma12%*%t(Ktilde))%*%
-  #   solve(((rcppeigen_get_chol(Gamma11))))
   L <- t(chol(Gamma11 - Gamma12 %*% t(Ktilde))) %*% solve(t(chol(Gamma11)))
   eta <- t(Rfast::rmvnorm(n = nsim, mu = rep(0, N1), sigma = Gamma11))
   etaT <- list()
@@ -388,12 +376,12 @@ Fast.LS_v <- function(nsim, u, M, N1, nu, l, tausq, tol, sseedLS=1) {
 ####################################################
 
 ### This function generates a multivariate normal (MVN) distribution with a covariance matrix extracted from a Mat\'ern kernel (MK)
-### M represents the number of subdomains (M>=1)
+### M represents the number of subdomains (M >= 1)
 ### N1 represents the number of equally-spaced points of the 1st subdomain
 ### p represents the truncated parameter of the KLE approach
 ### u: grid vector, should be of length M times N1
-### nu represents the smoothness parameter of the MK (nu>0)
-### l represents the length-scale parameter of MK (l>0)
+### nu represents the smoothness parameter of the MK (nu > 0)
+### l represents the length-scale parameter of MK (l > 0)
 ### tol: tolerance (relative to largest variance) for numerical lack of a positive-definiteness problem
 
 LS.KLE <- function(u, N1, p, M, nu, l, tausq, tol, sseedLS = 1) {
@@ -430,12 +418,12 @@ LS.KLE <- function(u, N1, p, M, nu, l, tausq, tol, sseedLS = 1) {
   L12 <- t(chol(diag(p)-crossprod(K12)))
   eta <- matrnorm(M, p)
   etaT <- matrix(NA, nrow = M, ncol = p)
-  f <- matrix(NA, nrpw = M, ncol = N1)
-  f[1,] <- vector11 %*% (sqrt(value11) * eta[1, ])  
-  etaT[1,] <- eta[1, ]
+  f <- matrix(NA, nrow = M, ncol = N1)
+  f[1, ] <- vector11 %*% (sqrt(value11) * eta[1, ])  
+  etaT[1, ] <- eta[1, ]
   for (i in 2 : M) {
-    etaT[i,] <- t(K12) %*% etaT[(i-1), ] + L12 %*% eta[i, ]
-    f[i,] <- vector11 %*% (sqrt(value11) * etaT[i, ])  
+    etaT[i, ] <- t(K12) %*% etaT[(i-1), ] + L12 %*% eta[i, ]
+    f[i, ] <- vector11 %*% (sqrt(value11) * etaT[i, ])  
   }
   return(as.vector(t(f)))
 }
@@ -490,7 +478,7 @@ LS.KLE_v <- function(nsim, u, N1, p, M, nu, l, tausq, tol, sseedLS = 1) {
     etaT[[i]] <- t(K12) %*% etaT[[i-1]] + L12 %*% eta
     f[[i]] <- vector11 %*% (sqrt(value11) * etaT[[i]])
   }
-  return(do.call(rbind,f))
+  return(do.call(rbind, f))
 }
 ###################################################
 
@@ -503,8 +491,8 @@ LS.KLE_v <- function(nsim, u, N1, p, M, nu, l, tausq, tol, sseedLS = 1) {
 ### This function generates a multivariate normal (MVN) distribution with a covariance matrix extracted from a Mat\'ern kernel (MK) using Cholesky decomposition
 ### N represents the size of the MVN
 ### u: grid vector, should be of length M times N1
-### nu represents the smoothness parameter of the MK (nu>0)
-### l represents the length-scale parameter of MK (l>0)
+### nu represents the smoothness parameter of the MK (nu > 0)
+### l represents the length-scale parameter of MK (l > 0)
 ### tol: tolerance (relative to largest variance) for numerical lack of a positive-definiteness problem
 
 
@@ -543,7 +531,7 @@ decreasing_vector <- function(input_vector) {
 
 
 ####################################################
-#### return vector s.t. xi[i+1]>= 2xi[i]-xi[1] #####
+#### return vector s.t. xi[i+1] >= 2xi[i]-xi[1] ####
 ####################################################
 convex_vector <- function(input) {
   n <- length(input)
@@ -560,7 +548,7 @@ convex_vector <- function(input) {
 
 
 ####################################################
-#### return vector s.t. xi[i+1]<= 2xi[i]-xi[1] #####
+#### return vector s.t. xi[i+1] <= 2xi[i]-xi[1] ####
 ####################################################
 concave_vector <- function(input) {
   n <- length(input)
@@ -804,16 +792,16 @@ constrSys <- function(N, type = c('increasing', 'decreasing', 'convex', 'concave
   type <- match.arg(type, several.ok = T) # allow using abbreviation
   switch(type,
          increasing = {
-           result <- list('A'=Amat1D(N), 'B'=rep(0, N-1))
+           result <- list('A' = Amat1D(N), 'B' = rep(0, N-1))
          },
          decreasing = {
-           result <- list('A'=-Amat1D(N), 'B'=rep(0, N-1))
+           result <- list('A' = -Amat1D(N), 'B' = rep(0, N-1))
          },
          convex = {
-           result <- list('A'=AC1D(N), 'B'=rep(0, N-2))
+           result <- list('A' = AC1D(N), 'B' = rep(0, N-2))
          },
          concave = {
-           result <- list('A'=-AC1D(N), 'B'=rep(0, N-2))
+           result <- list('A' = -AC1D(N), 'B' = rep(0, N-2))
          },
          boundedness = {
            if (missing(lower) & missing(upper))
@@ -826,7 +814,7 @@ constrSys <- function(N, type = c('increasing', 'decreasing', 'convex', 'concave
              A <- A[-idx, ]
              if (length(B) == 0) stop("bounds are not defined")
            }
-           result <- list('A'=A, 'B'=B)
+           result <- list('A' = A, 'B' = B)
          }
   )
   return(result)
