@@ -3,9 +3,8 @@
 ############################################################
 
 source('all_base_functions_1D.R')
-# source('tmg.R')
 library(Matrix) # crossprod
-# library(tmg) # HMC sampler
+library(tmg) # HMC sampler
 library(nloptr) # for resolving optim problem
 
 
