@@ -15,7 +15,7 @@ library(Rfast) # matrnorm
 
 
 
-## 1D Gaussian covariance function with length-scale parameter l
+## 1D Gaussian covariance function with length-scale parameter 'l'
 kGaus <- function(h, l) {
   exp(-0.5 * (h/l))
 }
@@ -32,7 +32,7 @@ covmat_Gaus <- function(knot, l) {
 # l (length-scale parameter) such that the correlation between the 
 # maximum seperation is some small value, say 0.05
 
-# 1D Matern kernel with smoothness nu and length-scale l:
+# 1D Matern kernel with smoothness parameter 'nu' and length-scale parameter 'l':
 k <- function(h, nu, l) {
   matern.covariance(h = h, kappa = sqrt(2*nu)/l, nu = nu, sigma = 1)
 }
