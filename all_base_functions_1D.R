@@ -34,7 +34,7 @@ covmat_Gaus <- function(knot, l) {
 
 # 1D Matern kernel with smoothness parameter 'nu' and length-scale parameter 'l':
 k <- function(h, nu, l) {
-  matern.covariance(h = h, kappa = sqrt(2*nu)/l, nu = nu, sigma = 1)
+  matern.covariance(h = h, kappa = sqrt(2 * nu) / l, nu = nu, sigma = 1)
 }
 
 ## function for uniroot:
@@ -225,7 +225,7 @@ ESS.linear <- function(y, X, beta, nu_ess, eta, sigsq, A, B, seeds = 1, constrTy
 ### loglik calculates the log of the likelihood: ###
 ####################################################
 
-## loglik linear constr AX+B>=0_m
+## loglik linear constr AX+B>=0_m for multiple shape constraints (monotonicity, boundedness and convexity)
 loglik_linear <- function(y, X, sigsq, eta, beta, A, B, lower = -Inf, upper = Inf, constrType = c('increasing', 'decreasing', 'convex', 'concave', 'boundedness')) {
   mu <- y - (X %*% beta)
   J_eta <- c()
@@ -467,8 +467,7 @@ LS.KLE_v <- function(nsim, u, N1, p, M, nu, l, tausq, tol, sseedLS = 1) {
   eig11 <- eigen(Gamma11)
   value11 <- eig11$values[1 : p]
   vector11 <- eig11$vectors[, 1 : p]
-  K12 <- (((t(vector11) %*% (Gamma12)) %*% (vector11))/
-            sqrt(tcrossprod(value11)))
+  K12 <- (((t(vector11) %*% (Gamma12)) %*% (vector11)) / sqrt(tcrossprod(value11)))
   L12 <- t(chol(diag(p) - crossprod(K12)))
   eta <- matrnorm(n = p, p = nsim)
   etaT <- list()
