@@ -166,10 +166,10 @@ linCGP.ESS <- function(y, x, N1, M, nu, l, est.l = F, eta, nsim, burn.in, thin, 
   
   em <- nsim + burn.in
   ef <- nsim / thin
-  xi_sam <- matrix(NA, N, ef)
+  xi_sam <- matrix(NA, nrow = N, ncol = ef)
   tau_sam <- rep(NA, ef)
   sig_sam <- rep(NA, ef)
-  fhat_sam <- matrix(NA, n, ef)
+  fhat_sam <- matrix(NA, nrow = n, ncol = ef)
   
   if (verbose)
     print("MCMC sample draws:")
@@ -455,10 +455,10 @@ linCGP.WC.ESS <- function(y,x,N,nu,l,est.l=F,eta,nsim,burn.in,thin,tau.in,sig.in
   
   em <- nsim + burn.in
   ef <- nsim / thin
-  xi_sam <- matrix(NA,N, ef)
+  xi_sam <- matrix(NA,nrow = N, ncol = ef)
   tau_sam <- rep(NA, ef)
   sig_sam <- rep(NA, ef)
-  fhat_sam <- matrix(NA, n, ef)
+  fhat_sam <- matrix(NA, nrow = n, ncol = ef)
   
   if (verbose)
     print("MCMC sample draws:")
