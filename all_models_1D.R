@@ -15,7 +15,7 @@ library(nloptr) # for resolving optim problem
 ####################################################
 ## Function for drawing posterior samples using ESS and LS with fixed hyperparameters \nu and \ell:
 ## For increasing,decreasing and boundedness functions estimation 
-linCGP.ESS <- function(y, x, N1, M, nu, l,est.l = F, eta, nsim, burn.in, thin, tau.in, sig.in, xi.in, lower = -Inf, upper = Inf,
+linCGP.ESS <- function(y, x, N1, M, nu, l, est.l = F, eta, nsim, burn.in, thin, tau.in, sig.in, xi.in, lower = -Inf, upper = Inf,
                        constrType, prior, tau.fix, sig.fix, sseed, verbose, return.plot, tol) {
   # y:Response variable; x: vector to form design matrix X (n x N)
   # N1: number of knots first subdomain; M: nb of subdomain
