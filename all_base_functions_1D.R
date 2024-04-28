@@ -34,7 +34,7 @@ covmat_Gaus <- function(knot, l) {
 
 # 1D Matern kernel with smoothness parameter 'nu' and length-scale parameter 'l':
 k <- function(h, nu, l) {
-  matern.covariance(h = h, kappa = sqrt(2 * nu) / l, nu = nu, sigma = 1)
+  matern.covariance(h = h, kappa = sqrt(2 * nu)/l, nu = nu, sigma = 1)
 }
 
 ## function for uniroot:
@@ -72,8 +72,8 @@ h <- function(x) {
   ifelse(x >= -1 & x <= 1, 1 - abs(x), 0)
 }
 hi <- function(x, u, i) {
-  delta <- (max(u) - min(u)) / (length(u) - 1)
-  h((x - u[i]) / delta)
+  delta <- (max(u) - min(u))/(length(u) - 1)
+  h((x - u[i])/delta)
 }
 
 
@@ -114,7 +114,7 @@ circulant <- function(x) {
 
 ## Function for forming the vector of circulant matrix:
 circ_vec <- function(knot, g, nu, l, tausq) {
-  delta_N <- 1 / (length(knot) - 1)
+  delta_N <- 1/(length(knot) - 1)
   m <- 2**g
   cj <- integer()
   for (j in 1 : m) {
@@ -172,14 +172,14 @@ samp.WC <- function(knot, nu, l, tausq, sseedWC = 1) {
   samp.vec <- rep(0, N)
   set.seed(sseedWC)
   a <- rep(0, m)
-  a[1] <- sqrt(lambda[1]) * rnorm(1) / sqrt(m)
-  a[(m/2)+1] <- sqrt(lambda[(m/2)+1]) * rnorm(1) / sqrt(m)
+  a[1] <- sqrt(lambda[1]) * rnorm(1)/sqrt(m)
+  a[(m/2)+1] <- sqrt(lambda[(m/2)+1]) * rnorm(1)/sqrt(m)
   i <- sqrt(as.complex(-1))
   for (j in 2 : (m/2)) {
     uj <- rnorm(1) 
     vj <- rnorm(1)
-    a[j] <- (sqrt(lambda[j]) * (uj + i * vj)) / (sqrt(2 * m))
-    a[m+2-j] <- (sqrt(lambda[j]) * (uj - i * vj)) / (sqrt(2 * m))
+    a[j] <- (sqrt(lambda[j]) * (uj + i * vj))/(sqrt(2 * m))
+    a[m+2-j] <- (sqrt(lambda[j]) * (uj - i * vj))/(sqrt(2 * m))
   }
   samp <- fft(a)
   samp.vec <- Re(samp[1 : N])
@@ -235,7 +235,7 @@ loglik_linear <- function(y, X, sigsq, eta, beta, A, B, lower = -Inf, upper = In
   if (any(constrType == 'increasing') || any(constrType == 'decreasing') || any(constrType == 'convex') || any(constrType == 'concave'))
     J_eta <- c(J_eta, -log(1+sum(exp(-eta*(A%*%beta+B)))))
   
-  val <- sum(J_eta) - sum(mu^2) / (2 * sigsq)
+  val <- sum(J_eta) - sum(mu^2)/(2 * sigsq)
   return(val)
 }
 ####################################################
@@ -467,7 +467,7 @@ LS.KLE_v <- function(nsim, u, N1, p, M, nu, l, tausq, tol, sseedLS = 1) {
   eig11 <- eigen(Gamma11)
   value11 <- eig11$values[1 : p]
   vector11 <- eig11$vectors[, 1 : p]
-  K12 <- (((t(vector11) %*% (Gamma12)) %*% (vector11)) / sqrt(tcrossprod(value11)))
+  K12 <- (((t(vector11) %*% (Gamma12)) %*% (vector11))/sqrt(tcrossprod(value11)))
   L12 <- t(chol(diag(p) - crossprod(K12)))
   eta <- matrnorm(n = p, p = nsim)
   etaT <- list()
