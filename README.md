@@ -20,6 +20,8 @@ One can find detailed description of each functions in the file.
 
 [Multiple constraints](https://github.com/maatouk/Efficient-constrained-GPs/blob/main/multiple-shape-constr.png): GP approximation using the proposed LS-ESS approach under only monotonicity constraints (left) and under both monotonicity and boundedness constraints (middle). The HMC approach is employed in the right panel under both constraints. The black dashed horizontal line represents the upper bound constraint.
 
+[Monotonicity 7D](https://github.com/maatouk/Efficient-constrained-GPs/blob/main/monotonicity-7D.png): From left to right: the mean a posteriori (mAP) estimate based on 6,000 McMC iterations, the Maximum a posteriori (MAP) estimate based on the posterior mode, and the target function. All these functions are evaluated at (x1,x2,0,...,0) (top) and at (x1,0,x3,0,...,0) (bottom), where (x1,x2,x3) in [0,1]^3.
+
 
 # Note:
 Part of this work was conducted with the support of the consortium in Applied Mathematics CIROQUO, gathering partners in technological research (BRGM, CEA, IFPEN, IRSN, Safran, Storengy) and academia (CNRS, Ecole Centrale de Lyon, Mines Saint-Etienne, University of Grenoble, University of Nice, University of Toulouse) around advanced methods for Computer Experiments [Link]( https://doi.org/10.5281/zenodo.65812)
