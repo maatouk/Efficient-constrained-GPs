@@ -49,7 +49,7 @@ if (multi_monot_convex_bd_syn == 'yes') {
 
 if (bound_syn == 'yes') {
   ###### bounded synthetic data ##########
-  f <- function(x){
+  f <- function(x) {
     ## Andrew Pensoneault (Nonnegativity enforced GPR 2020)
     1/(1+(10*x)^4)+0.5*exp(-100*(x-0.5)^2) # [0;1]
   }
