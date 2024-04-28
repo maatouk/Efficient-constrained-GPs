@@ -46,7 +46,7 @@ linCGP.ESS <- function(y, x, N1, M, nu, l, est.l = F, eta, nsim, burn.in, thin, 
   N <- N1 * M
   if (N <= 1)
     stop('N = N1 x M should be greater than or equal to 2')
-  delta <- 1 / (N - 1)
+  delta <- 1/(N - 1)
   my_knots <- seq(0, 1, by = delta)
   X <- fcth(x, u = my_knots, N)
   
@@ -165,7 +165,7 @@ linCGP.ESS <- function(y, x, N1, M, nu, l, est.l = F, eta, nsim, burn.in, thin, 
   xi_in <- xi.in
   
   em <- nsim + burn.in
-  ef <- nsim / thin
+  ef <- nsim/thin
   xi_sam <- matrix(NA, nrow = N, ncol = ef)
   tau_sam <- rep(NA, ef)
   sig_sam <- rep(NA, ef)
@@ -279,7 +279,7 @@ linCGP.ESS <- function(y, x, N1, M, nu, l, est.l = F, eta, nsim, burn.in, thin, 
   tm <- proc.time()-ptm
   
   ## posterior Mode
-  XXK <- crossprod(X) / mean(sig_sam) + K_inv / mean(tau_sam)
+  XXK <- crossprod(X)/mean(sig_sam) + K_inv/mean(tau_sam)
   z_star <- solve.QP(XXK, dvec = as.vector(t(X)%*%y)/mean(sig_sam),
                      Amat=t(rbind(A_b, A)), bvec = -c(B_b, B), meq = 0)$solution
   MAP <- X %*% z_star 
@@ -454,7 +454,7 @@ linCGP.WC.ESS <- function(y,x,N,nu,l,est.l=F,eta,nsim,burn.in,thin,tau.in,sig.in
   xi_in <- xi.in
   
   em <- nsim + burn.in
-  ef <- nsim / thin
+  ef <- nsim/thin
   xi_sam <- matrix(NA,nrow = N, ncol = ef)
   tau_sam <- rep(NA, ef)
   sig_sam <- rep(NA, ef)
@@ -563,7 +563,7 @@ linCGP.HMC <- function(y, x, N, nu, l, est.l = F, nsim, burn.in, thin, tau.in, s
   y <- y[order(x)]
   x <- sort(x)
   n <- length(y)
-  delta <- 1 / (N-1)
+  delta <- 1/(N-1)
   my_knots <- seq(0, 1, by = delta)
   X <- fcth(x, u = my_knots, N = N)
   
@@ -662,7 +662,7 @@ linCGP.HMC <- function(y, x, N, nu, l, est.l = F, nsim, burn.in, thin, tau.in, s
   xi_in <- xi.in
   
   em <- nsim + burn.in
-  ef <- nsim / thin
+  ef <- nsim/thin
   xi_sam <- matrix(NA, nrow = N, ncol = ef)
   tau_sam <- rep(NA, ef)
   sig_sam <- rep(NA, ef)
@@ -674,19 +674,19 @@ linCGP.HMC <- function(y, x, N, nu, l, est.l = F, nsim, burn.in, thin, tau.in, s
   ptm <- proc.time()
   for (i in 1 : em) {
     # sampling Xi:
-    M <- crossprod(X) / sig + K_inv / tau
-    r <- as.vector(t(X) %*% y) / sig
+    M <- crossprod(X)/sig + K_inv/tau
+    r <- as.vector(t(X) %*% y)/sig
     xi_out <- as.vector(rtmg(n = 1, M = M, r = r, initial = xi_in, f = A, g = B + tol, burn.in = 0))
     set.seed(2 * i)
     # sampling \sigma^2:
     Xxi <- as.vector(X %*% xi_out)
     y_star <- y - Xxi
     if (missing(sig.fix))
-      sig <- 1 / rgamma(1, shape = n / 2, rate = sum(y_star^2)/2)
+      sig <- 1/rgamma(1, shape = n/2, rate = sum(y_star^2)/2)
     
     # sampling \tau^2:
     if (missing(tau.fix))
-      tau <- 1 / rgamma(1, shape = N / 2, rate = (t(xi_out) %*% K_inv %*% xi_out)/2)
+      tau <- 1/rgamma(1, shape = N/2, rate = (t(xi_out) %*% K_inv %*% xi_out)/2)
     
     # storing MCMC samples:
     if (i > burn.in && i %% thin == 0) {
@@ -706,8 +706,8 @@ linCGP.HMC <- function(y, x, N, nu, l, est.l = F, nsim, burn.in, thin, tau.in, s
   tm <- proc.time() - ptm
   
   ## posterior Mode
-  XXK <- crossprod(X) / mean(sig_sam) + K_inv / mean(tau_sam)
-  z_star <- solve.QP(Dmat = XXK, dvec = as.vector(t(X) %*% y) / mean(sig_sam),
+  XXK <- crossprod(X)/mean(sig_sam) + K_inv/mean(tau_sam)
+  z_star <- solve.QP(Dmat = XXK, dvec = as.vector(t(X) %*% y)/mean(sig_sam),
                      Amat = t(A), bvec = -B, meq = 0)$solution
   MAP <- X %*% z_star 
   ## mAP estimate
