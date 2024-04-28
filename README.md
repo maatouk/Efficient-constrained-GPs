@@ -18,7 +18,7 @@ One can find detailed description of each functions in the file.
 
 [Boundedness](https://github.com/maatouk/Efficient-constrained-GPs/blob/main/LS-ESSvsHMV_boundedness.png): Bounded function estimation with three different approaches. Top: the proposed LS-ESS approach with N = 27 (left) and N = 100 (right). Middle: the FFT-WC ESS approach with N = 27 and N = 100 (right). Bottom: the HMC sampler with N = 27 (left) and N = 100 (right). The computation time (in second) of running the McMC sampler for 6,000 iterations is displayed at the main part of each panel, where the first 1,000 iterations are discarded as burn-in. As for monotonicity constraints, with a fine discretization, N = 100, the proposed LS-ESS approach is approximately 6 times faster than the HMC approach.
 
-[Multiple constraints]()
+[Multiple constraints](https://github.com/maatouk/Efficient-constrained-GPs/blob/main/multiple-shape-constr.png): GP approximation using the proposed LS-ESS approach under only monotonicity constraints (left) and under both monotonicity and boundedness constraints (middle). The HMC approach is employed in the right panel under both constraints. The black dashed horizontal line represents the upper bound constraint.
 
 
 # Note:
