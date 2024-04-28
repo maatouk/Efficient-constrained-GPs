@@ -222,7 +222,7 @@ ESS.linear <- function(y, X, beta, nu_ess, eta, sigsq, A, B, seeds = 1, constrTy
 
 ####################################################
 ## Defining the loglik function to be used in ESS ## 
-### loglik calculates the log of the likelihood: ###
+### loglik calculates the log of the likelihood ####
 ####################################################
 
 ## loglik linear constr AX+B>=0_m for multiple shape constraints (monotonicity, boundedness and convexity)
