@@ -6,7 +6,7 @@ library(DiceDesign) ## lhsDesign
 
 ## choice of the numerical example
 ## put 'yes' between quotations
-multi_monot_convex_bd_syn = 'yes' # for multiple linear inequalities (monotonicity, convexity and boundedness)
+multi_monot_convex_bd_syn = 'yes' # for multiple shape constraints (monotonicity, convexity and boundedness)
 bound_syn = '' # for boundedness constraints [a;b] using LS-ESS and HMC
 ####################################################
 
