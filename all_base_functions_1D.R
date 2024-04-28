@@ -418,7 +418,7 @@ LS.KLE <- function(u, N1, p, M, nu, l, tausq, tol, sseedLS = 1) {
   K12 <- (((t(vector11) %*% (Gamma12)) %*% (vector11))/
             sqrt(tcrossprod(value11)))
   L12 <- t(chol(diag(p)-crossprod(K12)))
-  eta <- matrnorm(M, p)
+  eta <- matrnorm(n = M, p = p)
   etaT <- matrix(NA, nrow = M, ncol = p)
   f <- matrix(NA, nrow = M, ncol = N1)
   f[1, ] <- vector11 %*% (sqrt(value11) * eta[1, ])  
