@@ -8,6 +8,7 @@ samp.WC (draws a sample based on sampling scheme developed in Wood and Chan [199
 One can find detailed description of each functions in the file.
 2. 'all_models_1D.R' file contains all models that implemented the efficient constrained Gaussian processes for shape-restricted function estimation using elliptical slice sampling like 'linCGP.ESS' (the proposed highly efficient approach based on the elliptical slice sampling), 'linCGP.HMC' (the approach based on the Hamiltonian Monte Carlo sampler) and 'linCGP.WC.ESS' (the approach based on the Fast Fourier Transform). The proposed function 'linCGP.ESS' can incorporate multiple shape constraints, estimate the hyperparameters and and utilize various efficient samplers to generate the prior. This function has been tested in cases of extreme constraints, a task that becomes impossible for the HMC sampler.
 3. 'illustr_exam_1D.R' file contains code for several numerical examples, demonstrating both boundedness and multiple shape constraints (monotonicity, boundedness and convexity).
+The document also includes a comparison between the proposed LS-ESS approach and the Hamiltonian Monte Carlo sampler.
 
 
    For more details on the codes or the functions, refer to the associated R files.
