@@ -370,7 +370,7 @@ linCGP.WC.ESS <- function(y,x,N,nu,l,est.l=F,eta,nsim,burn.in,thin,tau.in,sig.in
   # K <- covmat(my_knots,nu,l)
   # # prior precision:
   # if (min(eigen(K, symmetric = TRUE)$values) <= 0) # numerical stability
-  #   K <- K + tol*diag(nrow(K))
+  #   K <- K + tol * diag(nrow(K))
   # K_inv <- tinv(K)
   
   if (missing(eta))
