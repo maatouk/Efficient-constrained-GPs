@@ -84,7 +84,7 @@ if (bound_syn == 'yes') {
                               sig.in = sigN^2, tau.in = 1, constrType = 'boundedness', lower = lower, upper = upper,
                               prior = 'Fast.LS', return.plot = T, tol = tol, sseed = 12345)
   abline(h = c(lower, upper), lty = 2, lwd = 2)
-  x <- seq(0, 1, length = 100)
+  x <- seq(from = 0, to = 1, length = 100)
   lines(x, f(x), type = 'l', lwd = 2)
   mtext(text =  'Large-scale ESS', side = 3, line = 0.8, cex = 0.8)
   mtext(text =  paste("Running Time (s) = ", round(post_bound_LS$time[3],2), "and dimension N = ",N), side = 3, line = 0.1, cex = 0.8)
@@ -99,7 +99,7 @@ if (bound_syn == 'yes') {
                                  sig.in = sigN^2, tau.in = 1, constrType = 'boundedness',
                                  return.plot = T, sseed = 12345, lower = lower, upper = upper)
   abline(h = c(upper, lower), lty = 2, lwd = 2)
-  x <- seq(0, 1, length = 100)
+  x <- seq(from = 0, to = 1, length = 100)
   lines(x, f(x), type = 'l', lwd = 2)
   mtext(text =  'FFT-WC ESS', side = 3, line = 0.8, cex = 0.8)
   mtext(text =  paste("Running Time (s) = ", round(post_bound_WC$time[3],2), "and dimension N = ",N), side = 3, line = 0.1, cex = 0.8)
