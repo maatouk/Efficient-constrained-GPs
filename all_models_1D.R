@@ -2,7 +2,6 @@
 #### Function for MCMC samples using ESS and LS algo #######
 ############################################################
 
-setwd("~/Documents/Recherche/Article_high-dim_CGP/R codes/1D cases")
 source('all_base_functions_1D.R')
 library(Matrix) # crossprod
 library(nloptr) # for resolving optim problem
