@@ -2,10 +2,14 @@
 #### Function for MCMC samples using ESS and LS algo #######
 ############################################################
 
+setwd("~/Documents/Recherche/Article_high-dim_CGP/R codes/1D cases")
 source('all_base_functions_1D.R')
 library(Matrix) # crossprod
-library(tmg) # HMC sampler
 library(nloptr) # for resolving optim problem
+## to install the old version of 'tmg' package
+# library(remotes)
+# install_version("tmg", "0.3")
+library(tmg)
 
 
 
@@ -21,7 +25,7 @@ linCGP.ESS <- function(y, x, N1, M, nu, l, est.l = F, eta, nsim, burn.in, thin, 
   # N1: number of knots first subdomain; M: nb of subdomain
   # nu:smoothness parameter of Matern; l:length-scale parameter of Matern
   # est.l logical if TRUE, the estimated value of length-scale para "l" will be employed 
-  # eta:parameter of the approximation function of the indicator functions
+  # eta: parameter of the approximation function of the indicator functions
   # nsim, burn.in, thin : nsim samples, burning and thinning for MCMC
   # tau.in, sig.in, xi.in : initial values (supplied by user or use the default values)
   # tau.fix,sig.fix : if fixed values of the parameters are to use
@@ -370,7 +374,7 @@ linCGP.WC.ESS <- function(y,x,N,nu,l,est.l=F,eta,nsim,burn.in,thin,tau.in,sig.in
   # K <- covmat(my_knots,nu,l)
   # # prior precision:
   # if (min(eigen(K, symmetric = TRUE)$values) <= 0) # numerical stability
-  #   K <- K + tol * diag(nrow(K))
+  #   K <- K + tol*diag(nrow(K))
   # K_inv <- tinv(K)
   
   if (missing(eta))
@@ -455,7 +459,7 @@ linCGP.WC.ESS <- function(y,x,N,nu,l,est.l=F,eta,nsim,burn.in,thin,tau.in,sig.in
   
   em <- nsim + burn.in
   ef <- nsim/thin
-  xi_sam <- matrix(NA,nrow = N, ncol = ef)
+  xi_sam <- matrix(NA, nrow = N, ncol = ef)
   tau_sam <- rep(NA, ef)
   sig_sam <- rep(NA, ef)
   fhat_sam <- matrix(NA, nrow = n, ncol = ef)
@@ -483,11 +487,11 @@ linCGP.WC.ESS <- function(y,x,N,nu,l,est.l=F,eta,nsim,burn.in,thin,tau.in,sig.in
     Xxi <- as.vector(X %*% xi_out)
     y_star <- y - Xxi
     if (missing(sig.fix))
-      sig <- 1/rgamma(1,shape=n/2,rate=sum(y_star^2)/2)
+      sig <- 1/rgamma(1, shape = n/2, rate = sum(y_star^2)/2)
     
     # sampling \tau^2:
     if (missing(tau.fix))
-      tau <- 1/rgamma(1,shape=N/2,rate=(t(xi_out)%*%K_inv%*%xi_out)/2)
+      tau <- 1/rgamma(1, shape = N/2, rate = (t(xi_out) %*% K_inv %*% xi_out)/2)
     
     # storing MCMC samples:
     if (i > burn.in && i%%thin == 0) {
@@ -739,7 +743,4 @@ linCGP.HMC <- function(y, x, N, nu, l, est.l = F, nsim, burn.in, thin, tau.in, s
 
 
 
-
-
-
-## end
+## end               
