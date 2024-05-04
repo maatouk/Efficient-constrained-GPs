@@ -34,7 +34,7 @@ if (multi_monot_convex_bd_syn == 'yes') {
   l <- round(l_est(nu, c(0, 1), 0.05), 2) # length-scale
   upper <- 1 # upper bound for boundedness constr
   
-  ## LS-ESS with only monotonicity
+  ## LS-ESS with multiple shape constraints (increasing, boundedness and convexity)
   post_lin_LS <- linCGP.ESS(y = ytr, x = xtr, N1 = N1, M = M, nu = nu, l = l, eta = eta, nsim = nsim, burn.in = brn, thin = thin,
                             sig.in = sigN^2, tau.in = 1, constrType = c('increasing', 'boundedness', 'convex'),
                             prior = 'Fast.LS', return.plot = T, tol = 0, sseed = 12345, lower = 0, upper = 1)
