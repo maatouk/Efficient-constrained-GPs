@@ -614,8 +614,8 @@ linCGP.WC.ESS <- function(y, x, N, nu, l, est.l=F, eta, nsim, burn.in, thin, tau
                
 
 
-### Function for drawing posterior samples using HMC with fixed hyperparameters \nu and \ell:
-### For increasing,decreasing and boundedness functions estimation 
+### Function for drawing posterior samples using HMC:
+## For multiple shape constraints (monotonicity, boundedness and convexity) 
 linCGP.HMC <- function(y, x, N, nu, l, est.l = F, nsim, burn.in, thin, tau.in, sig.in, xi.in, lower = -Inf, upper = Inf,
                        constrType, tau.fix, sig.fix, sseed, verbose, return.plot, tol) {
   # y:Response variable; x: vector to form design matrix X (n x N)
@@ -639,7 +639,7 @@ linCGP.HMC <- function(y, x, N, nu, l, est.l = F, nsim, burn.in, thin, tau.in, s
   x <- sort(x)
   n <- length(y)
   delta <- 1/(N-1)
-  my_knots <- seq(0, 1, by = delta)
+  my_knots <- seq(from = 0, to = 1, by = delta)
   X <- fcth(x, u = my_knots, N = N)
   
   if (missing(nu))
@@ -685,12 +685,28 @@ linCGP.HMC <- function(y, x, N, nu, l, est.l = F, nsim, burn.in, thin, tau.in, s
   }
   
   if (any(constrType == 'increasing')) {
+    if (any(constrType == 'decreasing'))
+      stop('Error: \'increasing\' and \'decreasing\' are not compabitle together')
     A <- rbind(A, constrSys(N = N, type = 'increasing')$A)
     B <- c(B, constrSys(N = N, type = 'increasing')$B)
   }
   if (any(constrType == 'decreasing')) {
+    if (any(constrType == 'increasing'))
+      stop('Error: \'increasing\' and \'decreasing\' are not compabitle together')
     A <- rbind(A, constrSys(N = N, type = 'decreasing')$A)
     B <- c(B, constrSys(N = N, type = 'decreasing')$B)
+  }
+  if (any(constrType == 'convex')) {
+    if (any(constrType == 'concave'))
+      stop('Error: \'convex\' and \'concave\' are not compabitle together')
+    A <- rbind(A, constrSys(N = N, type = 'convex')$A)
+    B <- c(B, constrSys(N = N, type = 'convex')$B)
+  }
+  if (any(constrType == 'concave')) {
+    if (any(constrType == 'convex'))
+      stop('Error: \'convex\' and \'concave\' are not compabitle together')
+    A <- rbind(A, constrSys(N = N, type = 'concave')$A)
+    B <- c(B, constrSys(N = N, type = 'concave')$B)
   }
   
   if (!missing(tau.fix))
