@@ -506,7 +506,8 @@ linCGP.WC.ESS <- function(y, x, N, nu, l, est.l=F, eta, nsim, burn.in, thin, tau
     
     # renewing the intial value:
     xi_in <- xi_out
-  }; tm <- proc.time()-ptm
+  } 
+  tm <- proc.time() - ptm
   
   ## posterior Mode
   XXK <- crossprod(X)/mean(sig_sam) + K_inv/mean(tau_sam)
