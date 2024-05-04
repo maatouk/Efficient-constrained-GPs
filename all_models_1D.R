@@ -105,21 +105,21 @@ linCGP.ESS <- function(y, x, N1, M, nu, l, est.l = F, eta, nsim, burn.in, thin, 
       lower <- rep(lower, N)
     if (length(upper) == 1)
       upper <- rep(upper, N)
-    A_b <- rbind(A,constrSys(N = N, type = 'boundedness', lower = lower, upper = upper)$A)
-    B_b <- c(B,constrSys(N = N, type = 'boundedness', lower = lower, upper = upper)$B)
+    A_b <- rbind(A, constrSys(N = N, type = 'boundedness', lower = lower, upper = upper)$A)
+    B_b <- c(B, constrSys(N = N, type = 'boundedness', lower = lower, upper = upper)$B)
   }
   
   if (any(constrType == 'increasing')) {
     if (any(constrType == 'decreasing'))
       stop('Error: \'increasing\' and \'decreasing\' are not compabitle together')
-    A <- rbind(A,constrSys(N = N, type = 'increasing')$A)
-    B <- c(B,constrSys(N = N, type = 'increasing')$B)
+    A <- rbind(A, constrSys(N = N, type = 'increasing')$A)
+    B <- c(B, constrSys(N = N, type = 'increasing')$B)
   }
   if (any(constrType == 'decreasing')) {
     if (any(constrType == 'increasing'))
       stop('Error: \'increasing\' and \'decreasing\' are not compabitle together')
-    A <- rbind(A,constrSys(N = N, type = 'decreasing')$A)
-    B <- c(B,constrSys(N = N, type = 'decreasing')$B)
+    A <- rbind(A, constrSys(N = N, type = 'decreasing')$A)
+    B <- c(B, constrSys(N = N, type = 'decreasing')$B)
   }
   if (any(constrType == 'convex')) {
     if (any(constrType == 'concave'))
