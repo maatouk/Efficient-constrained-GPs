@@ -318,8 +318,8 @@ linCGP.ESS <- function(y, x, N1, M, nu, l, est.l = F, eta, nsim, burn.in, thin, 
 
 
 
-### Function for drawing posterior samples using ESS and FFT-WC:
-### For increasing, decreasing and boundedness functions estimation 
+## Function for drawing posterior samples using ESS and FFT-WC:
+## For multiple shape constraints (monotonicity, boundedness and convexity) 
 linCGP.WC.ESS <- function(y, x, N, nu, l, est.l=F, eta, nsim, burn.in, thin, tau.in, sig.in, xi.in, lower = -Inf, upper = Inf,
                           constrType, tau.fix, sig.fix, sseed, verbose, return.plot, tol) {
   # y:Response variable; x: vector to form design matrix X (n x N)
