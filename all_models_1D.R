@@ -17,7 +17,7 @@ library(tmg)
 ########## Linear constraints Axi+B>0 ##############
 ####################################################
 ## Function for drawing posterior samples using ESS and LS:
-## For increasing,decreasing and boundedness functions estimation 
+## For multiple shape constraints (monotonicity, boundedness and convexity) 
 linCGP.ESS <- function(y, x, N1, M, nu, l, est.l = F, eta, nsim, burn.in, thin, tau.in, sig.in, xi.in, lower = -Inf, upper = Inf,
                        constrType, prior, tau.fix, sig.fix, sseed, verbose, return.plot, tol) {
   # y:Response variable; x: vector to form design matrix X (n x N)
@@ -279,7 +279,7 @@ linCGP.ESS <- function(y, x, N1, M, nu, l, est.l = F, eta, nsim, burn.in, thin, 
     # renewing the intial value:
     xi_in <- xi_out
   }
-  tm <- proc.time()-ptm
+  tm <- proc.time() - ptm
   
   ## posterior Mode
   XXK <- crossprod(X)/mean(sig_sam) + K_inv/mean(tau_sam)
@@ -400,18 +400,34 @@ linCGP.WC.ESS <- function(y, x, N, nu, l, est.l=F, eta, nsim, burn.in, thin, tau
     if (length(lower) == 1)
       lower <- rep(lower, N)
     if (length(upper) == 1)
-      upper <- rep(upper,N)
+      upper <- rep(upper, N)
     A_b <- rbind(A, constrSys(N = N, type = 'boundedness', lower = lower, upper = upper)$A)
-    B_b <- c(B,constrSys(N = N, type = 'boundedness', lower = lower, upper = upper)$B)
+    B_b <- c(B, constrSys(N = N, type = 'boundedness', lower = lower, upper = upper)$B)
   }
   
   if (any(constrType == 'increasing')) {
+    if (any(constrType == 'decreasing'))
+      stop('Error: \'increasing\' and \'decreasing\' are not compabitle together')
     A <- rbind(A, constrSys(N = N, type = 'increasing')$A)
     B <- c(B, constrSys(N = N, type = 'increasing')$B)
   }
   if (any(constrType == 'decreasing')) {
+    if (any(constrType == 'increasing'))
+      stop('Error: \'increasing\' and \'decreasing\' are not compabitle together')
     A <- rbind(A, constrSys(N = N, type = 'decreasing')$A)
     B <- c(B, constrSys(N = N, type = 'decreasing')$B)
+  }
+  if (any(constrType == 'convex')) {
+    if (any(constrType == 'concave'))
+      stop('Error: \'convex\' and \'concave\' are not compabitle together')
+    A <- rbind(A, constrSys(N = N, type = 'convex')$A)
+    B <- c(B, constrSys(N = N, type = 'convex')$B)
+  }
+  if (any(constrType == 'concave')) {
+    if (any(constrType == 'convex'))
+      stop('Error: \'convex\' and \'concave\' are not compabitle together')
+    A <- rbind(A, constrSys(N = N, type = 'concave')$A)
+    B <- c(B, constrSys(N = N, type = 'concave')$B)
   }
   
   if (!missing(tau.fix))
@@ -472,14 +488,66 @@ linCGP.WC.ESS <- function(y, x, N, nu, l, est.l=F, eta, nsim, burn.in, thin, tau
     nu.ess <- samp.WC(knot = my_knots, nu = nu, l = l, tausq = tau, sseedWC = i)
     xi_out <- ESS.linear(y = y, X = X, beta = xi_in, nu_ess = nu.ess, sigsq = sig,
                          eta = eta, A = A, B = B, lower = lower, upper = upper, constrType = constrType, seeds = i)
-    if (any(constrType == 'increasing')) {
-      xi_out <- increasing_vector(xi_out)
+    if (length(constrType) == 1) {
+      if (constrType == 'increasing') {
+        xi_out <- increasing_vector(xi_out)
+      }
+      else if (constrType == 'decreasing') {
+        xi_out <- decreasing_vector(xi_out)
+      }
+      else if (constrType == 'convex') {
+        xi_out <- convex_vector(xi_out)
+      }
+      else if (constrType == 'concave') {
+        xi_out <- concave_vector(xi_out)
+      }
+      else if (constrType == 'boundedness') {
+        xi_out <- pmin(pmax(lower,xi_out),upper)
+      }
     }
-    if (any(constrType == 'decreasing')) {
-      xi_out <- decreasing_vector(xi_out)
+    else if (length(constrType) == 2) {
+      if (any(constrType == 'boundedness') & any(constrType == 'increasing')) {
+        xi_out <- increasing_vector(xi_out)
+        xi_out <- pmin(pmax(lower, xi_out), upper)
+      }
+      else if (any(constrType == 'boundedness') & any(constrType == 'decreasing')) {
+        xi_out <- decreasing_vector(xi_out)
+        xi_out <- pmin(pmax(lower, xi_out), upper)
+      }
+      else if (any(constrType == 'boundedness') & any(constrType == 'convex')) {
+        xi_out <- convex_vector(xi_out)
+        xi_out <- pmin(pmax(lower, xi_out), upper)
+      }
+      else if (any(constrType == 'boundedness') & any(constrType == 'concave')) {
+        xi_out <- concave_vector(xi_out)
+        xi_out <- pmin(pmax(lower, xi_out), upper)
+      }
+      else if (any(constrType == 'increasing') & any(constrType == 'convex'))
+        xi_out <- inc_conv_vector(xi_out)
+      else if (any(constrType == 'increasing') & any(constrType == 'concave'))
+        xi_out <- inc_conc_vector(xi_out)
+      else if (any(constrType == 'decreasing') & any(constrType == 'convex'))
+        xi_out <- dec_conv_vector(xi_out)
+      else if (any(constrType == 'decreasing') & any(constrType == 'concave'))
+        xi_out <- dec_conc_vector(xi_out)
     }
-    if (any(constrType == 'boundedness')) {
-      xi_out <- pmin(pmax(lower, xi_out), upper)
+    else if (length(constrType == 3)) {
+      if (any(constrType == 'boundedness') & any(constrType == 'increasing') & any(constrType == 'convex')) {
+        xi_out <- inc_conv_vector(xi_out)
+        xi_out <- pmin(pmax(lower, xi_out), upper)
+      }
+      else if (any(constrType == 'boundedness') & any(constrType == 'increasing') & any(constrType == 'concave')) {
+        xi_out <- inc_conc_vector(xi_out)
+        xi_out <- pmin(pmax(lower, xi_out), upper)
+      }
+      else if (any(constrType == 'boundedness') & any(constrType == 'decreasing') & any(constrType == 'convex')) {
+        xi_out <- dec_conv_vector(xi_out)
+        xi_out <- pmin(pmax(lower, xi_out), upper)
+      }
+      else if (any(constrType == 'boundedness') & any(constrType == 'decreasing') & any(constrType == 'concave')) {
+        xi_out <- dec_conc_vector(xi_out)
+        xi_out <- pmin(pmax(lower, xi_out), upper)
+      }
     }
     set.seed(2 * i)
     # sampling \sigma^2:
