@@ -124,14 +124,14 @@ linCGP.ESS <- function(y, x, N1, M, nu, l, est.l = F, eta, nsim, burn.in, thin, 
   if (any(constrType == 'convex')) {
     if (any(constrType == 'concave'))
       stop('Error: \'convex\' and \'concave\' are not compabitle together')
-    A <- rbind(A,constrSys(N = N, type = 'convex')$A)
-    B <- c(B,constrSys(N = N, type = 'convex')$B)
+    A <- rbind(A, constrSys(N = N, type = 'convex')$A)
+    B <- c(B, constrSys(N = N, type = 'convex')$B)
   }
   if (any(constrType == 'concave')) {
     if (any(constrType == 'convex'))
       stop('Error: \'convex\' and \'concave\' are not compabitle together')
-    A <- rbind(A,constrSys(N = N, type = 'concave')$A)
-    B <- c(B,constrSys(N = N, type = 'concave')$B)
+    A <- rbind(A, constrSys(N = N, type = 'concave')$A)
+    B <- c(B, constrSys(N = N, type = 'concave')$B)
   }
   
   ## for the estimation of the length-scale para
