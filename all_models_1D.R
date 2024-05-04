@@ -16,7 +16,7 @@ library(tmg)
 ####################################################
 ########## Linear constraints Axi+B>0 ##############
 ####################################################
-## Function for drawing posterior samples using ESS and LS with fixed hyperparameters \nu and \ell:
+## Function for drawing posterior samples using ESS and LS:
 ## For increasing,decreasing and boundedness functions estimation 
 linCGP.ESS <- function(y, x, N1, M, nu, l, est.l = F, eta, nsim, burn.in, thin, tau.in, sig.in, xi.in, lower = -Inf, upper = Inf,
                        constrType, prior, tau.fix, sig.fix, sseed, verbose, return.plot, tol) {
@@ -318,10 +318,10 @@ linCGP.ESS <- function(y, x, N1, M, nu, l, est.l = F, eta, nsim, burn.in, thin, 
 
 
 
-### Function for drawing posterior samples using ESS and FFT-WC with fixed hyperparameters \nu and \ell:
-### For increasing,decreasing and boundedness functions estimation 
-linCGP.WC.ESS <- function(y,x,N,nu,l,est.l=F,eta,nsim,burn.in,thin,tau.in,sig.in,xi.in,lower=-Inf,upper=Inf,
-                          constrType,tau.fix,sig.fix,sseed,verbose,return.plot,tol) {
+### Function for drawing posterior samples using ESS and FFT-WC:
+### For increasing, decreasing and boundedness functions estimation 
+linCGP.WC.ESS <- function(y, x, N, nu, l, est.l=F, eta, nsim, burn.in, thin, tau.in, sig.in, xi.in, lower = -Inf, upper = Inf,
+                          constrType, tau.fix, sig.fix, sseed, verbose, return.plot, tol) {
   # y:Response variable; x: vector to form design matrix X (n x N)
   # N: number of knots 
   # nu:smoothness parameter of Matern; l:length-scale parameter of Matern
@@ -344,8 +344,8 @@ linCGP.WC.ESS <- function(y,x,N,nu,l,est.l=F,eta,nsim,burn.in,thin,tau.in,sig.in
   x <- sort(x)
   n <- length(y)
   delta <- 1/(N-1)
-  my_knots <- seq(0,1,by=delta)
-  X <- fcth(x,u=my_knots,N)
+  my_knots <- seq(from = 0, to = 1, by = delta)
+  X <- fcth(x, u = my_knots, N)
   
   if (missing(nu))
     stop("nu needs to be supplied")
@@ -354,9 +354,9 @@ linCGP.WC.ESS <- function(y,x,N,nu,l,est.l=F,eta,nsim,burn.in,thin,tau.in,sig.in
   if (missing(constrType))
     stop('constrType should be specified and must be one of the following: \'increasing\',
          \'decreasing\', \'boundedness\'')
-  if (length(constrType)>=4)
+  if (length(constrType) >= 4)
     stop('You cannot select more than three shape constraints simultaneously')
-  if (!missing(l) && l==0)
+  if (!missing(l) && l == 0)
     stop("l cannot be zero")
   if (missing(return.plot))
     return.plot <- TRUE
@@ -398,20 +398,20 @@ linCGP.WC.ESS <- function(y,x,N,nu,l,est.l=F,eta,nsim,burn.in,thin,tau.in,sig.in
     if (any(lower >= upper)) 
       stop("The elements from \"upper\" has to be greater than the elements from \"lower\"")
     if (length(lower) == 1)
-      lower <- rep(lower,N)
+      lower <- rep(lower, N)
     if (length(upper) == 1)
       upper <- rep(upper,N)
-    A_b <- rbind(A,constrSys(N=N,type='boundedness',lower=lower,upper=upper)$A)
-    B_b <- c(B,constrSys(N=N,type='boundedness',lower=lower,upper=upper)$B)
+    A_b <- rbind(A, constrSys(N = N, type = 'boundedness', lower = lower, upper = upper)$A)
+    B_b <- c(B,constrSys(N = N, type = 'boundedness', lower = lower, upper = upper)$B)
   }
   
   if (any(constrType == 'increasing')) {
-    A <- rbind(A,constrSys(N=N,type='increasing')$A)
-    B <- c(B,constrSys(N=N,type='increasing')$B)
+    A <- rbind(A, constrSys(N = N, type = 'increasing')$A)
+    B <- c(B, constrSys(N = N, type = 'increasing')$B)
   }
   if (any(constrType == 'decreasing')) {
-    A <- rbind(A,constrSys(N=N,type='decreasing')$A)
-    B <- c(B,constrSys(N=N,type='decreasing')$B)
+    A <- rbind(A, constrSys(N = N, type = 'decreasing')$A)
+    B <- c(B, constrSys(N = N, type = 'decreasing')$B)
   }
   
   if (!missing(tau.fix))
@@ -427,8 +427,8 @@ linCGP.WC.ESS <- function(y,x,N,nu,l,est.l=F,eta,nsim,burn.in,thin,tau.in,sig.in
   fzetoil <- function(l) {
     K_inv <- tinv(covmat(knot = my_knots, nu = nu, l = l))
     XXK <- crossprod(X) + K_inv
-    solve.QP(XXK,dvec=as.vector(t(X)%*%y),
-             Amat=t(rbind(A_b, A)),bvec=-c(B_b, B),meq=0)$solution
+    solve.QP(Dmat = XXK, dvec = as.vector(t(X) %*% y),
+             Amat = t(rbind(A_b, A)), bvec = -c(B_b, B), meq = 0)$solution
   }
   fMAP <- function(l) {
     X %*% fzetoil(l)
@@ -443,7 +443,7 @@ linCGP.WC.ESS <- function(y,x,N,nu,l,est.l=F,eta,nsim,burn.in,thin,tau.in,sig.in
       l <- nloptr(l_est(nu, range = range(my_knots), 0.05), MSPE, lb = 0.1, ub = 1, opts = opts)$solution
     }
     else if (est.l == F)
-      l <- l_est(nu,range=range(my_knots),0.05)
+      l <- l_est(nu, range = range(my_knots), 0.05)
   }
   if (missing(xi.in)) {
     xi.in <- fzetoil(l)
@@ -469,9 +469,9 @@ linCGP.WC.ESS <- function(y,x,N,nu,l,est.l=F,eta,nsim,burn.in,thin,tau.in,sig.in
   ptm <- proc.time()
   for (i in 1 : em) {
     # sampling Xi:
-    nu.ess <- samp.WC(knot=my_knots, nu=nu, l=l, tausq=tau, sseedWC=i)
-    xi_out <- ESS.linear(y=y, X=X, beta=xi_in, nu_ess=nu.ess, sigsq=sig,
-                         eta=eta, A=A, B=B, lower=lower, upper=upper, constrType=constrType, seeds=i)
+    nu.ess <- samp.WC(knot = my_knots, nu = nu, l = l, tausq = tau, sseedWC = i)
+    xi_out <- ESS.linear(y = y, X = X, beta = xi_in, nu_ess = nu.ess, sigsq = sig,
+                         eta = eta, A = A, B = B, lower = lower, upper = upper, constrType = constrType, seeds = i)
     if (any(constrType == 'increasing')) {
       xi_out <- increasing_vector(xi_out)
     }
@@ -481,7 +481,7 @@ linCGP.WC.ESS <- function(y,x,N,nu,l,est.l=F,eta,nsim,burn.in,thin,tau.in,sig.in
     if (any(constrType == 'boundedness')) {
       xi_out <- pmin(pmax(lower, xi_out), upper)
     }
-    set.seed(2*i)
+    set.seed(2 * i)
     # sampling \sigma^2:
     Xxi <- as.vector(X %*% xi_out)
     y_star <- y - Xxi
@@ -509,22 +509,22 @@ linCGP.WC.ESS <- function(y,x,N,nu,l,est.l=F,eta,nsim,burn.in,thin,tau.in,sig.in
   }; tm <- proc.time()-ptm
   
   ## posterior Mode
-  XXK <- crossprod(X)/mean(sig_sam)+K_inv/mean(tau_sam)
-  z_star <- solve.QP(XXK,dvec=as.vector(t(X)%*%y)/mean(sig_sam),
-                     Amat=t(rbind(A_b, A)),bvec=-c(B_b, B),meq=0)$solution
-  MAP <- X%*%z_star 
+  XXK <- crossprod(X)/mean(sig_sam) + K_inv/mean(tau_sam)
+  z_star <- solve.QP(Dmat = XXK, dvec = as.vector(t(X) %*% y)/mean(sig_sam),
+                     Amat = t(rbind(A_b, A)), bvec = -c(B_b, B), meq = 0)$solution
+  MAP <- X %*% z_star 
   ## mAP estimate
   z_mean <- rowMeans(xi_sam)
   fmean <- rowMeans(fhat_sam) # mAP estimate
-  qnt <- apply(fhat_sam,1,function(x) quantile(x,c(0.025,0.975),na.rm=TRUE))
-  f_low <- qnt[1,]
-  f_upp <- qnt[2,]
-  ub <- max(f_low,f_upp,fmean,MAP)
-  lb <- min(f_low,f_upp,fmean,MAP)
+  qnt <- apply(fhat_sam, 1, function(x) quantile(x, c(0.025, 0.975), na.rm = TRUE))
+  f_low <- qnt[1, ]
+  f_upp <- qnt[2, ]
+  ub <- max(f_low, f_upp, fmean,MAP)
+  lb <- min(f_low, f_upp, fmean, MAP)
   
   if (return.plot) {
-    par(mfrow=c(1, 1))
-    par(mar=c(2.1, 2.1, 2.1, 1.1)) # adapt margins
+    par(mfrow = c(1, 1))
+    par(mar = c(2.1, 2.1, 2.1, 1.1)) # adapt margins
     plot(x, y, pch = '*', lwd = 2, lty = 1, col = 'black',
          ylim = range(ub, lb, y), xlab = '', ylab = '')
     polygon(c(x, rev(x)), y = c(f_low, rev(f_upp)), border = F, col = 'gray')
@@ -540,6 +540,9 @@ linCGP.WC.ESS <- function(y,x,N,nu,l,est.l=F,eta,nsim,burn.in,thin,tau.in,sig.in
 }
 ###################################################
 
+
+
+               
 
 
 ### Function for drawing posterior samples using HMC with fixed hyperparameters \nu and \ell:
