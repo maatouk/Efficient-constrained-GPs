@@ -1,6 +1,6 @@
 ### All required functions for using ESS
 ### Functions related to Wood and Chan algorithm of drawing samples
-### Two highly efficient functions for sampling large MVN distribution
+### Two highly efficient functions for sampling large MVN distribution (Fast.LS and LS.KLE)
 ### Covariance matrix and design matrix (using basis function) are also defined
 ### Matrices of multiples shape constraints are also defined
 ### And all related and dependant functions are here
@@ -26,7 +26,7 @@ covmat_Gaus <- function(knot, l) {
 }
 
 ####################################################
-######### Mat\'ern family covariance kernels #######
+######### Matérn family covariance kernels #########
 ####################################################
 #Given a \nu (smoothness parameter of matern kernel) finding a value of 
 # l (length-scale parameter) such that the correlation between the 
@@ -41,7 +41,7 @@ k <- function(h, nu, l) {
 fl <- function(l, para) { 
   #para[1]=x, para[2]=y and para[3]=nu of MK : Matern kernel function;
   #para[4]=pre-specified value of the correlation
-  a <- k(h = abs(para[1]-para[2]), nu = para[3], l = l)
+  a <- k(h = abs(para[1] - para[2]), nu = para[3], l = l)
   return(a - para[4])
 }
 
@@ -230,10 +230,10 @@ loglik_linear <- function(y, X, sigsq, eta, beta, A, B, lower = -Inf, upper = In
   mu <- y - (X %*% beta)
   J_eta <- c()
   if (any(constrType == 'boundedness')) {
-    J_eta <- c(J_eta, -log(1+sum(exp(-eta*(upper-beta))+exp(-eta*(beta-lower))+exp(-eta*(upper-lower)))))
+    J_eta <- c(J_eta, -log(1 + sum(exp(-eta * (upper - beta)) + exp(-eta * (beta - lower)) + exp(-eta * (upper - lower)))))
   }
   if (any(constrType == 'increasing') || any(constrType == 'decreasing') || any(constrType == 'convex') || any(constrType == 'concave'))
-    J_eta <- c(J_eta, -log(1+sum(exp(-eta*(A%*%beta+B)))))
+    J_eta <- c(J_eta, -log(1 + sum(exp(-eta * (A %*% beta + B)))))
   
   val <- sum(J_eta) - sum(mu^2)/(2 * sigsq)
   return(val)
@@ -246,7 +246,7 @@ loglik_linear <- function(y, X, sigsq, eta, beta, A, B, lower = -Inf, upper = In
 ############## Fast Large-scale ####################
 ####################################################
 
-### This function generates a multivariate normal (MVN) distribution with a covariance matrix extracted from a Mat\'ern kernel (MK)
+### This function generates a multivariate normal (MVN) distribution with a covariance matrix extracted from a Matérn kernel (MK)
 ### M represents the number of subdomains (M>=1)
 ### N1 represents the number of equally-spaced points of the 1st subdomain
 ### u: grid vector, should be of length M times N1
@@ -262,7 +262,7 @@ Fast.LS <- function(u, M, N1, nu, l, tausq, tol, sseedLS = 1) {
     tol <- 1e-5
   }
   if (missing(M)) {
-    M <-1
+    M <- 1
   }
   if (M == 0)
     stop("M cannot be zero")
@@ -333,6 +333,7 @@ Fast.LS.WC <- function(u, M, N1, nu, l, tausq, tol, sseedWC = 1) {
   return(as.vector(t(etaT)))
 }
 ####################################################
+
 
 ### Fast Large-scale for more than one sample
 Fast.LS_v <- function(nsim, u, M, N1, nu, l, tausq, tol, sseedLS = 1) {
@@ -407,7 +408,7 @@ LS.KLE <- function(u, N1, p, M, nu, l, tausq, tol, sseedLS = 1) {
   Gamma11 <- tausq * covmat(u1, nu, l) + tol * diag(N1)
   set.seed(sseedLS)
   if (M == 1) {
-    # return(as.vector(rcpp_rmvnorm(n=1,S=Gamma11,mu=rep(0,N1))))
+    # return(as.vector(rcpp_rmvnorm(n = 1, S = Gamma11, mu = rep(0, N1))))
     return(Rfast::rmvnorm(n = 1, mu = rep(0, N1), sigma = Gamma11))
   }
   else 
@@ -606,7 +607,7 @@ inc_conc_vector <- function(input) {
   else {
     output <- input
     for (i in 3 : n) {
-      output[i] <- pmax(pmin(output[i], 2*output[i-1]-output[i-2]), output[i-1]) 
+      output[i] <- pmax(pmin(output[i], 2 * output[i-1] - output[i-2]), output[i-1]) 
     }
     return(output)
   }
@@ -723,10 +724,10 @@ err.meas.report <- function(ytest, ytr, mu, out, type = "all") {
   
   # computing the errors
   # WAIC error
-  likval <- matrix(0,nrow = n, ncol = nsim)
+  likval <- matrix(0, nrow = n, ncol = nsim)
   for (i in 1 : n) {
     for (j in 1 : nsim) {
-      likval[i,j] <- dnorm(ytr[i], mean = fhat_sam[i,j], sd = sqrt(sig_sam[j]))
+      likval[i,j] <- dnorm(ytr[i], mean = fhat_sam[i, j], sd = sqrt(sig_sam[j]))
     }
   }
   lppd <- sum(log(rowMeans(likval)))
@@ -741,7 +742,7 @@ err.meas.report <- function(ytest, ytr, mu, out, type = "all") {
   error <- c(mae = mean(error_abs), mse = mean(error_sq),
              rmse = sqrt(mean(error_sq)),
              smse = mean(std_error_sq), 
-             Q2 = Q2, pva = abs(log(mean(pva))), WAIC=waic1)
+             Q2 = Q2, pva = abs(log(mean(pva))), WAIC = waic1)
   switch(type,
          mae = {return(error["mae"])},
          mse = {return(error["mse"])},
