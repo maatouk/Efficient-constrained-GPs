@@ -7,6 +7,7 @@ library(DiceDesign) ## lhsDesign
 ## choice of the numerical example
 ## put 'yes' between quotations
 multi_monot_convex_bd_syn = 'yes' # for multiple shape constraints (monotonicity, convexity and boundedness)
+multi_monot_bd_syn = '' # for multiple shape constraints (monotonicity and constant upper bound)
 bound_syn = '' # for boundedness constraints [a;b] using LS-ESS and HMC
 comp_mon_HMC_LS_WC = '' # for synthetic monotone nonincreasing functions (comparison between LS-ESS, LS-WC-FFT and HMC)
 ####################################################
@@ -50,6 +51,128 @@ if (multi_monot_convex_bd_syn == 'yes') {
 ####################################################
 
 
+
+
+
+
+
+
+if (multi_monot_bd_syn == 'yes') {
+  ###### true function 
+  f <- function(x) {
+    1/(1 + exp(-6 * x))
+  }
+  ## data
+  set.seed(12345)
+  n <- 100
+  sigN <- 0.2 # noise sd
+  xtr <-  # lhsDesign(n=n,dimension=1,seed=12345)$design
+    runif(n, min = 0, max = 1)
+  ytr <- f(xtr) + rnorm(n, 0, sd = sigN)
+  N1 <- 9#10# # size of the 1st subdomain
+  M <- 3#10# # nb of subdomains
+  N <- N1 * M # nb of knot points
+  eta <- 200 # smooth approximate parameter
+  nsim <- 5000 # nb of mcmc retained samples
+  brn <- 1000 # burn in
+  thin <- 1
+  nu <- 2.5 # smoothness kernel parameter
+  l <- round(l_est(nu, c(0, 1), 0.05), 2) # length-scale
+  tol <- 1e-9
+  upper <- 1 # upper bound for boundedness constr
+  
+  ## LS-ESS with only monotonicity 
+  post_mon_LS <- linCGP.ESS(y = ytr, x = xtr, N1 = N1, M = M, nu = nu, l = l, eta = eta, nsim = nsim, burn.in = brn, thin = thin,
+                            sig.in = sigN^2, tau.in = 1, constrType = 'increasing',
+                            prior = 'Fast.LS', return.plot = F, tol = tol, sseed = 12345)
+  ## LS-ESS with monotonicity and boundedness
+  post_lin_LS <- linCGP.ESS(y = ytr, x = xtr, N1 = N1, M = M, nu = nu, l = l, eta = eta, nsim = nsim, burn.in = brn, thin = thin,
+                            sig.in = sigN^2, tau.in = 1, constrType = c('increasing', 'boundedness'),
+                            prior = 'Fast.LS', return.plot = F, tol = tol, sseed = 12345, upper = upper)
+  
+  post_lin_HMC <- linCGP.HMC(y = ytr, x = xtr, N = N, nu = nu, l = l, nsim = nsim, burn.in = brn, thin = thin,
+                             sig.in = sigN^2, tau.in = 1, constrType = c('increasing', 'boundedness'),
+                             return.plot = F, tol = tol, sseed = 12345, upper = upper)
+  ## computing some terms for the illustrations 
+  f_low_mon <- post_mon_LS$f_low
+  f_upp_mon <- post_mon_LS$f_upp
+  f_low <- post_lin_LS$f_low
+  f_upp <- post_lin_LS$f_upp
+  f_low_HMC <- post_lin_HMC$f_low
+  f_upp_HMC <- post_lin_HMC$f_upp
+  
+  fmean <- post_lin_LS$fmean
+  MAP <- post_lin_LS$MAP
+  fmean_HMC <- post_lin_HMC$fmean
+  MAP_HMC <- post_lin_HMC$MAP
+  fmean_mon <- post_mon_LS$fmean
+  MAP_mon <- post_mon_LS$MAP
+  ub <- max(f_upp, fmean, MAP, fmean_mon, MAP_mon, f_upp_mon,
+            f_upp_HMC, fmean_HMC, MAP_HMC)
+  lb <- min(f_low, fmean, MAP, fmean_mon, MAP_mon, f_low_mon,
+            f_low_HMC, fmean_HMC, MAP_HMC)
+  ytr <- ytr[order(xtr)]
+  xtr <- sort(xtr)
+  
+  par(mfrow = c(1, 1))
+  par(mar = c(2.1, 2.1, 1.7, 1.1)) # adapt margins
+  ## Illustration only monotonicity
+  plot(xtr, ytr, pch = '*', lwd = 2, lty = 1, col = 'black',
+       ylim = range(ub, lb, ytr), xlab = '', ylab = '')
+  polygon(c(xtr, rev(xtr)), y = c(f_low_mon, rev(f_upp_mon)), border = F, col = 'gray')
+  lines(xtr, fmean_mon, type = 'l', lty = 4, lwd = 2, col = 'blue')
+  lines(xtr, MAP_mon, type = 'l', lty = 2, lwd = 2, col = 'red')
+  points(xtr, ytr, pch = '*')
+  mtext(text =  'LS-ESS approach', side = 3, line = 0.9, cex = 0.8)
+  mtext(text =  'only monotonicity constraints', side = 3, line = 0.1, cex = 0.8)
+  x <- seq(from = 0, to = 1, length = 100)
+  lines(x, f(x), type = 'l', lwd = 2)
+  abline(h = 1, lty = 2, lwd = 2)
+  legend(0.45, 0.8,
+         c("true function", "MAP", "mAP"),
+         col = c("black", 'red', 'blue'), 
+         text.col = "black", lty = c(1, 2, 4),
+         lwd = c(2, 2, 2), text.font = 1, box.lty = 0, cex = 0.8,
+         bg = 'transparent')
+  ## Illustration monotonicity and boudedness (LS-ESS approach)
+  plot(xtr, ytr, pch = '*', lwd = 2, lty = 1, col = 'black',
+       ylim = range(ub, lb, ytr), xlab = '', ylab = '')
+  polygon(c(xtr, rev(xtr)), y = c(f_low, rev(f_upp)), border = F, col = 'gray')
+  lines(xtr, fmean, type = 'l', lty = 4, lwd = 2, col = 'blue')
+  lines(xtr, MAP, type = 'l', lty = 2, lwd = 2, col = 'red')
+  points(xtr, ytr, pch = '*')
+  mtext(text =  'LS-ESS approach', side = 3, line = 0.9, cex = 0.8)
+  mtext(text =  'monotonicity and boundedness constraints', side = 3, line = 0.1, cex = 0.8)
+  x <- seq(from = 0, to = 1, length = 100)
+  lines(x, f(x), type = 'l', lwd = 2)
+  abline(h = 1, lty = 2, lwd = 2)
+  legend(0.45, 0.8,
+         c("true function", "MAP", "mAP"),
+         col = c("black", 'red', 'blue'), 
+         text.col = "black", lty = c(1, 2, 4),
+         lwd = c(2, 2, 2), text.font = 1, box.lty = 0, cex = 0.8,
+         bg = 'transparent')
+  
+  ## Illustration monotonicity and boudedness (HMC sampler)
+  plot(xtr, ytr, pch = '*', lwd = 2, lty = 1, col = 'black',
+       ylim = range(ub, lb, ytr), xlab = '', ylab = '')
+  polygon(c(xtr, rev(xtr)), y = c(f_low_HMC, rev(f_upp_HMC)), border = F, col = 'gray')
+  lines(xtr, fmean_HMC, type = 'l', lty = 4, lwd = 2, col = 'blue')
+  lines(xtr, MAP_HMC, type = 'l', lty = 2, lwd = 2, col = 'red')
+  points(xtr, ytr, pch = '*')
+  mtext(text =  'HMC approach', side = 3, line = 0.9, cex = 0.8)
+  mtext(text =  'monotonicity and boundedness constraints', side = 3, line = 0.1, cex = 0.8)
+  x <- seq(from = 0, to = 1, length = 100)
+  lines(x, f(x), type = 'l', lwd = 2)
+  abline(h = 1, lty = 2, lwd = 2)
+  legend(0.45, 0.8,
+         c("true function", "MAP", "mAP"),
+         col = c("black", 'red', 'blue'), 
+         text.col = "black", lty = c(1, 2, 4),
+         lwd = c(2, 2, 2), text.font = 1, box.lty = 0, cex = 0.8,
+         bg = 'transparent')
+}
+####################################################
 
 
 
