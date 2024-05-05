@@ -55,7 +55,9 @@ if (multi_monot_convex_bd_syn == 'yes') {
 
 
 
-
+####################################################
+############ monotone and bounded fct ##############
+####################################################
 
 if (multi_monot_bd_syn == 'yes') {
   ###### true function 
@@ -66,11 +68,10 @@ if (multi_monot_bd_syn == 'yes') {
   set.seed(12345)
   n <- 100
   sigN <- 0.2 # noise sd
-  xtr <-  # lhsDesign(n=n,dimension=1,seed=12345)$design
-    runif(n, min = 0, max = 1)
+  xtr <- runif(n, min = 0, max = 1)
   ytr <- f(xtr) + rnorm(n, 0, sd = sigN)
-  N1 <- 9#10# # size of the 1st subdomain
-  M <- 3#10# # nb of subdomains
+  N1 <- 9 # size of the 1st subdomain
+  M <- 3 # nb of subdomains
   N <- N1 * M # nb of knot points
   eta <- 200 # smooth approximate parameter
   nsim <- 5000 # nb of mcmc retained samples
