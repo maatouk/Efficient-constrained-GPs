@@ -22,7 +22,7 @@ linCGP.ESS <- function(y, x, N1, M, nu, l, est.l = F, eta, nsim, burn.in, thin, 
                        constrType, prior, tau.fix, sig.fix, sseed, verbose, return.plot, tol) {
   # y:Response variable; x: vector to form design matrix X (n x N)
   # N1: number of knots first subdomain; M: nb of subdomain
-  # nu:smoothness parameter of Matern; l:length-scale parameter of Matern
+  # nu: smoothness parameter of Matern; l:length-scale parameter of Matern
   # est.l logical if TRUE, the estimated value of length-scale para "l" will be employed 
   # eta: parameter of the approximation function of the indicator functions
   # nsim, burn.in, thin : nsim samples, burning and thinning for MCMC
@@ -35,7 +35,7 @@ linCGP.ESS <- function(y, x, N1, M, nu, l, est.l = F, eta, nsim, burn.in, thin, 
   # constrType: type of inequality constraints ('increasing','decreasing','convex','concave','boundedness')
   # lower and upper: options for only boundedness constr
   
-  # OUTPUT: Posterior samples on xi,tau,sig and fhat with posterior mean, 95% CI of fhat, mode of posterior distribution z_star
+  # OUTPUT: Posterior samples on xi,tau,sig and fhat with posterior mean, 95% CI of fhat, mode of posterior distribution z_star, MAP, length-scale 'l', knots
   
   if (length(y) != length(x))
     stop("y and x should be of same length!")
