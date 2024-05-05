@@ -39,6 +39,13 @@ if (multi_monot_convex_bd_syn == 'yes') {
                             sig.in = sigN^2, tau.in = 1, constrType = c('increasing', 'boundedness', 'convex'),
                             prior = 'Fast.LS', return.plot = T, tol = 0, sseed = 12345, lower = 0, upper = 1)
   lines(sort(xtr), f(sort(xtr)), type = 'l', lwd = 2)
+  mtext(text =  'LS-ESS approach', side = 3, line = 0.9, cex = 0.8)
+  mtext(text =  'monotonicity, boundedness and convexity constraints', side = 3, line = 0.1, cex = 0.8)
+  legend(0,0.9, c("true function", "MAP", "mAP"),
+         col = c("black", 'red', 'blue'), 
+         text.col = "black", lty = c(1, 2, 4),
+         lwd = c(2, 2, 2), text.font = 1, box.lty = 0, cex = 0.8,
+         bg = 'transparent')
 }
 ####################################################
 
