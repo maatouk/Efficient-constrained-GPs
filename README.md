@@ -42,7 +42,7 @@ Maatouk, H. and Rullière, D. and Bay, X. (2023b). "Large-scale constrained Gaus
 
 
 Maatouk, H. and Rullière, D. and Bay, X. (2024a). "Bayesian analysis of constrained Gaussian processes". Bayesian Analysis, doi: 10.1214/24-BA1429
-[doi](https://projecteuclid.org/journals/bayesian-analysis/advance-publication/Bayesian-Analysis-of-Constrained-Gaussian-Processes/10.1214/24-BA1429.full) [Supplementary Material](https://doi.org/10.1214/24-BA1429SUPP)
+[pdf](https://projecteuclid.org/journals/bayesian-analysis/advance-publication/Bayesian-Analysis-of-Constrained-Gaussian-Processes/10.1214/24-BA1429.full) [Supplementary Material](https://doi.org/10.1214/24-BA1429SUPP)
 
 Maatouk, H. and Rullière, D. and Bay, X. (2024b). "Efficient constrained Gaussian processes using elliptical slice sampling" [preprint](https://hal.science/hal-04496474)
 
